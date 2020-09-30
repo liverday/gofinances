@@ -1,7 +1,5 @@
 # <h1 align="center">![Go Finances](.github/logo.svg)</h1>
 
-## 💰 O projeto
-
 GoFinances é uma aplicação Mobile/Web com o objetivo de controlar suas finanças (eu preciso muito disso), permitindo que você cadastre entradas, saídas e categorize-as de uma forma organizada!
 
 ## 🚀 Tecnologias utilizadas
@@ -27,7 +25,7 @@ GoFinances é uma aplicação Mobile/Web com o objetivo de controlar suas finan�
 - Jest
 - Supertest
 
-## 🏃 Rodando a aplicação
+## 💻 Rodando a aplicação
 
 #### Requisitos
 
@@ -80,3 +78,5 @@ yarn typeorm migration:run
 ```sh
 yarn dev:server
 ```
+
+Feito com :heart: por Vitor Medeiro. 🤝 Entre em [contato](https://www.linkedin.com/in/vitor-medeiro-9096ab138) 
