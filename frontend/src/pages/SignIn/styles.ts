@@ -18,10 +18,15 @@ export const Content = styled.div`
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
+  color: #fff;
 
   form {
     width: 100%;
     margin: 50px 0;
+
+    div + div {
+      margin-top: 10px;
+    }
   }
 
   > a {

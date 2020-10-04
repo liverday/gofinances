@@ -4,13 +4,12 @@ import { useHistory, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-
 import { FiMail, FiLock } from 'react-icons/fi';
 
 import logoImg from '../../assets/logo.svg';
 
-import api from '../../services/api';
-import { login, logout } from '../../services/auth';
+import { useAuth } from '../../hooks/auth';
+
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import Input from '../../components/Input';
@@ -18,15 +17,21 @@ import Button from '../../components/Button';
 
 import { Container, Content } from './styles';
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
 const SignIn: React.FC = () => {
+  const { signIn, signOut } = useAuth();
   const history = useHistory();
   const formRef = useRef<FormHandles>(null);
 
   useEffect(() => {
-    logout();
-  }, []);
+    signOut();
+  }, [signOut]);
 
-  async function handleSubmit(formData: any): Promise<void> {
+  async function handleSubmit(formData: SignInFormData): Promise<void> {
     try {
       const schema = Yup.object().shape({
         email: Yup.string()
@@ -39,9 +44,11 @@ const SignIn: React.FC = () => {
         abortEarly: false,
       });
 
-      const { data } = await api.post('/sessions', formData);
+      await signIn({
+        email: formData.email,
+        password: formData.password,
+      });
 
-      login(data.token);
       history.push('/dashboard');
     } catch (err) {
       if (err instanceof Yup.ValidationError) {

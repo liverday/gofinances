@@ -24,6 +24,8 @@ class CreateTransactionService {
     const categoryRepository = getRepository(Category);
     const transactionRepository = getCustomRepository(TransactionsRepository);
 
+    if (!['outcome', 'income'].includes(type)) throw new Error('Invalid type');
+
     if (type === 'outcome') {
       const { total } = await transactionRepository.getBalance(user_id);
 

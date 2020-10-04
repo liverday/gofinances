@@ -32,9 +32,13 @@ const Import: React.FC = () => {
 
     try {
       await api.post('/transactions/import', data);
-      history.push('/');
+      toast.success('Transações importadas com sucesso!');
+      history.push('/dashboard');
     } catch (err) {
       console.log(err.response.error);
+      toast.error(
+        'Ocorreu um erro ao realizar a importação, verique os dados e tente novamente.',
+      );
     }
   }
 

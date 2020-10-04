@@ -2,33 +2,37 @@ import React from 'react';
 
 import { Switch, Route, Redirect, RouteProps } from 'react-router-dom';
 
+import { useAuth } from '../hooks/auth';
+
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import Dashboard from '../pages/Dashboard';
 import Import from '../pages/Import';
 import NewTransaction from '../pages/NewTransaction';
 
-import { isAuthenticated } from '../services/auth';
-
 interface PrivateRouteProps extends RouteProps {
-  component: any;
+  component: React.ComponentType;
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
   ...rest
-}) => (
-  <Route
-    {...rest}
-    render={props =>
-      isAuthenticated() ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to={{ pathname: '/', state: { from: props.location } }} />
-      )
-    }
-  />
-);
+}) => {
+  const { user } = useAuth();
+
+  return (
+    <Route
+      {...rest}
+      render={props => {
+        return user ? (
+          <Component />
+        ) : (
+          <Redirect to={{ pathname: '/', state: { from: props.location } }} />
+        );
+      }}
+    />
+  );
+};
 
 const Routes: React.FC = () => (
   <Switch>
@@ -37,6 +41,7 @@ const Routes: React.FC = () => (
     <PrivateRoute path="/dashboard" component={Dashboard} />
     <PrivateRoute path="/new-transaction" component={NewTransaction} />
     <PrivateRoute path="/import" component={Import} />
+    <Redirect from="*" to="/" />
   </Switch>
 );
 

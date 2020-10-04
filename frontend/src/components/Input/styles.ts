@@ -40,10 +40,12 @@ export const Container = styled.div<ContainerProps>`
     &::placeholder {
       color: #969cb2;
     }
-  }
 
-  & + div {
-    margin-top: 10px;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
   }
 
   > svg {

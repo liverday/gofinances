@@ -19,15 +19,24 @@ transactionsRouter.use(isAuthenticated);
 
 transactionsRouter.get('/', async (request, response) => {
   const { id } = request.user;
+  const { sort, direction } = request.query;
+
+  let order: object = {
+    created_at: 'DESC',
+  };
+
+  if (sort && direction) {
+    order = {
+      [sort as string]: direction,
+    };
+  }
 
   const transactionRepository = getCustomRepository(TransactionsRepository);
 
   const transactions = await transactionRepository.find({
     where: { user_id: id },
     relations: ['category'],
-    order: {
-      created_at: 'DESC',
-    },
+    order,
   });
 
   const balance = await transactionRepository.getBalance(id);

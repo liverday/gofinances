@@ -14,9 +14,16 @@ import { Container, Error } from './styles';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   icon?: React.ComponentType<IconBaseProps>;
+  containerClassName?: string;
+  mask?: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
+const Input: React.FC<InputProps> = ({
+  name,
+  icon: Icon,
+  containerClassName,
+  ...rest
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFilled, setIsFilled] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -41,25 +48,28 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <>
-      <Container isFilled={isFilled} isFocused={isFocused} hasError={!!error}>
-        {Icon && <Icon size={20} />}
+    <Container
+      className={containerClassName}
+      isFilled={isFilled}
+      isFocused={isFocused}
+      hasError={!!error}
+    >
+      {Icon && <Icon size={20} />}
 
-        <input
-          onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
-          defaultValue={defaultValue}
-          {...rest}
-          ref={inputRef}
-        />
+      <input
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        defaultValue={defaultValue}
+        {...rest}
+        ref={inputRef}
+      />
 
-        {error && (
-          <Error title={error}>
-            <FiAlertCircle size={20} />
-          </Error>
-        )}
-      </Container>
-    </>
+      {error && (
+        <Error title={error}>
+          <FiAlertCircle size={20} />
+        </Error>
+      )}
+    </Container>
   );
 };
 

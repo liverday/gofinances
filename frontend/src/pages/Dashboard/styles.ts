@@ -47,6 +47,12 @@ export const Card = styled.div`
     font-weight: normal;
     line-height: 54px;
   }
+
+  transition: transform 0.2s ease-in;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
 `;
 
 export const TableContainer = styled.section`
@@ -63,6 +69,12 @@ export const TableContainer = styled.section`
       text-align: left;
       font-size: 16px;
       line-height: 24px;
+      height: 30px;
+
+      svg {
+        vertical-align: middle;
+        cursor: pointer;
+      }
     }
 
     td {

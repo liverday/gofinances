@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
-import { FiTrash } from 'react-icons/fi';
+import { FiTrash, FiChevronUp, FiChevronDown } from 'react-icons/fi';
+import { toast } from 'react-toastify';
 
 import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
@@ -37,20 +38,36 @@ interface Balance {
   total: number;
 }
 
+interface Sort {
+  sort: string;
+  direction: string;
+}
+
 const Dashboard: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [balance, setBalance] = useState<Balance>({} as Balance);
+  const [sortData, setSortData] = useState<Sort>(() => {
+    return {
+      sort: 'created_at',
+      direction: 'DESC',
+    };
+  });
 
   useEffect(() => {
-    async function loadTransactions(): Promise<void> {
-      const { data } = await api.get('/transactions');
+    async function loadTransactions({ sort, direction }: Sort): Promise<void> {
+      const { data } = await api.get('/transactions', {
+        params: {
+          sort,
+          direction,
+        },
+      });
 
       setTransactions(data.transactions);
       setBalance(data.balance);
     }
 
-    loadTransactions();
-  }, []);
+    loadTransactions(sortData);
+  }, [sortData]);
 
   const handleDelete = async (
     transactionToDelete: Transaction,
@@ -73,7 +90,22 @@ const Dashboard: React.FC = () => {
     newBalance.total = newBalance.income - newBalance.outcome;
 
     setBalance(newBalance);
+    toast.success('Transação apagada com sucesso!');
   };
+
+  const handleSort = useCallback((sort: string, direction: string) => {
+    setSortData({ sort, direction });
+  }, []);
+
+  const sortIcon =
+    sortData.direction === 'DESC' ? (
+      <FiChevronDown
+        size={20}
+        onClick={() => handleSort('created_at', 'ASC')}
+      />
+    ) : (
+      <FiChevronUp size={20} onClick={() => handleSort('created_at', 'DESC')} />
+    );
 
   return (
     <>
@@ -112,7 +144,7 @@ const Dashboard: React.FC = () => {
                 <th>Título</th>
                 <th>Preço</th>
                 <th>Categoria</th>
-                <th>Data</th>
+                <th>Data {sortIcon}</th>
                 <th>&nbsp;</th>
               </tr>
             </thead>
