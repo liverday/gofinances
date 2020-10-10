@@ -6,7 +6,7 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
-  background: #5636d3;
+  background: ${props => props.theme.colors.primary};
   padding: 30px 0;
 
   header {
@@ -23,7 +23,7 @@ export const Container = styled.div<ContainerProps>`
 
       nav {
         a {
-          color: #fff;
+          color: ${props => props.theme.colors.secondaryText};
           text-decoration: none;
           font-size: 16px;
           transition: opacity 0.2s;
@@ -34,7 +34,7 @@ export const Container = styled.div<ContainerProps>`
           }
 
           &.active-link {
-            border-bottom: 2px solid #ff872c;
+            border-bottom: 2px solid ${props => props.theme.colors.secondary};
           }
 
           &:hover {
@@ -43,9 +43,13 @@ export const Container = styled.div<ContainerProps>`
         }
       }
 
+      .theme-switcher {
+        margin-left: 20px;
+      }
+
       > a {
-        background: #ff872c;
-        color: #fff;
+        background: ${props => props.theme.colors.secondary};
+        color: ${props => props.theme.colors.secondaryText};
         display: flex;
         align-items: center;
         justify-content: center;
@@ -61,7 +65,7 @@ export const Container = styled.div<ContainerProps>`
         }
 
         &:hover {
-          background: ${tint(0.15, '#ff872c')}
+          background: ${props => tint(0.15, props.theme.colors.secondary)};
         }
       }
     }

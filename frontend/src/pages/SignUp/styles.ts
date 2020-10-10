@@ -4,7 +4,7 @@ import { shade } from 'polished';
 export const Container = styled.div`
   width: 100vw;
   height: 100vh;
-  background: #5636d3;
+  background: ${props => props.theme.colors.primary};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,12 +24,12 @@ export const Content = styled.div`
   }
 
   > a {
-    color: #fff;
+    color: ${props => props.theme.colors.secondaryText};
     text-decoration: none;
     transition: color 0.2s;
 
     &:hover {
-      color: ${shade(0.15, '#FFF')};
+      color: ${props => shade(0.15, props.theme.colors.secondaryText)};
     }
   }
 `;

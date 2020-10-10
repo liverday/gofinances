@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { ToastContainer } from 'react-toastify';
 
-import { AuthProvider } from './hooks/auth';
+import AppProvider from './hooks/index';
 
 import Routes from './routes';
 
@@ -12,11 +12,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => (
   <Router>
-    <AuthProvider>
+    <AppProvider>
       <Routes />
-    </AuthProvider>
+      <GlobalStyle />
+    </AppProvider>
     <ToastContainer />
-    <GlobalStyle />
   </Router>
 );
 

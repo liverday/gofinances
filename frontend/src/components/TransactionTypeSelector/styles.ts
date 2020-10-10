@@ -8,24 +8,24 @@ interface TypeInputProps {
 
 const typeInputVariation = {
   income: css`
-    border-color: ${rgba('#12A454', 0.1)};
-    background: ${rgba('#12A454', 0.1)};
+    border-color: ${props => rgba(props.theme.colors.success, 0.1)};
+    background: ${props => rgba(props.theme.colors.success, 0.1)};
   `,
   outcome: css`
-    border-color: ${rgba('#E83F5B', 0.1)};
-    background: ${rgba('#E83F5B', 0.1)};
+    border-color: ${props => rgba(props.theme.colors.danger, 0.1)};
+    background: ${props => rgba(props.theme.colors.danger, 0.1)};
   `,
 };
 
 export const TypeInput = styled.div<TypeInputProps>`
   flex: 1;
-  color: #363f5f;
+  color: ${props => props.theme.colors.primaryText};
   cursor: pointer;
   text-align: center;
   background: transparent;
   padding: 16px;
   border-radius: 5px;
-  border: 1px solid ${tint(0.8, '#969cb2')};
+  border: 1px solid ${props => tint(0.8, props.theme.colors.defaultText)};
 
   & + div {
     margin-left: 8px;

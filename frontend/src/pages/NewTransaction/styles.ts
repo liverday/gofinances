@@ -12,20 +12,20 @@ export const Title = styled.h1`
   font-weight: 500;
   font-size: 36px;
   line-height: 54px;
-  color: #363f5f;
+  color: ${props => props.theme.colors.primaryText};
   text-align: center;
 `;
 
 export const NewTransactonContainer = styled.section`
-  background: #fff;
+  background: ${props => props.theme.colors.default};
   margin-top: 40px;
   border-radius: 5px;
   padding: 32px;
 
   form {
     .form-group {
-      background: ${tint(0.95, '#969cb2')};
-      border-color: ${tint(0.95, '#969cb2')};
+      background: ${props => tint(0.95, props.theme.colors.defaultText)};
+      border-color: ${props => tint(0.95, props.theme.colors.defaultText)};
     }
 
     > div + div {

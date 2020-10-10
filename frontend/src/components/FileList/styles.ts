@@ -7,7 +7,7 @@ export const Container = styled.ul`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #444;
+    color: ${props => props.theme.colors.primaryText};
 
     & + li {
       margin-top: 15px;
@@ -24,7 +24,7 @@ export const FileInfo = styled.div`
   button {
     border: 0;
     background: transparent;
-    color: #e83f5b;
+    color: ${props => props.theme.colors.danger};
     margin-left: 5px;
     cursor: pointer;
   }
@@ -36,7 +36,7 @@ export const FileInfo = styled.div`
 
     span {
       font-size: 12px;
-      color: #999;
+      color: ${props => props.theme.colors.defaultText};
       margin-top: 5px;
     }
 
@@ -44,7 +44,7 @@ export const FileInfo = styled.div`
       transition: color 0.2s;
       &:hover {
         cursor: pointer;
-        color: #e83f5b;
+        color: ${props => props.theme.colors.danger};
       }
     }
   }

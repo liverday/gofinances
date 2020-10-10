@@ -9,11 +9,11 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
-  background: #fff;
+  background: ${props => props.theme.colors.background};
   border-radius: 10px;
   padding: 16px;
-  border: 2px solid #fff;
-  color: #969cb2;
+  border: 2px solid ${props => props.theme.colors.secondaryText};
+  color: ${props => props.theme.colors.defaultText};
   width: 100%;
 
   display: flex;
@@ -22,23 +22,23 @@ export const Container = styled.div<ContainerProps>`
   ${props =>
     props.hasError &&
     css`
-      border-color: #e83f5b;
+      border-color: ${props.theme.colors.danger};
     `}
 
   ${props =>
     (props.isFocused || props.isFilled) &&
     css`
-      color: #ff872c;
+      color: ${props.theme.colors.secondary};
     `}
 
   input {
     border: 0;
     flex: 1;
     background: transparent;
-    color: #363f5f;
+    color: ${props => props.theme.colors.primaryText};
 
     &::placeholder {
-      color: #969cb2;
+      color: ${props => props.theme.colors.defaultText};
     }
 
     &::-webkit-outer-spin-button,
@@ -56,18 +56,18 @@ export const Container = styled.div<ContainerProps>`
 export const Error = styled(Tooltip)`
   height: 20px;
   margin-left: 16px;
-  color: #e83f5b;
+  color: ${props => props.theme.colors.danger};
 
   svg {
     margin: 0;
   }
 
   span {
-    background: #e83f5b;
-    color: #fff;
+    background: ${props => props.theme.colors.danger};
+    color: ${props => props.theme.colors.dangerText};
 
     &::before {
-      border-color: #e83f5b transparent;
+      border-color: ${props => props.theme.colors.danger} transparent;
     }
   }
 `;

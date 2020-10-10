@@ -1,8 +1,9 @@
-import styled from 'styled-components';
+import styled, { ThemeProps } from 'styled-components';
 import { rgba, tint, shade } from 'polished';
 import Tooltip from '../../components/Tooltip';
+import Theme from '../../styles/themes/theme';
 
-interface CardProps {
+interface CardProps extends ThemeProps<Theme> {
   total?: boolean;
 }
 
@@ -15,7 +16,7 @@ export const Container = styled.div`
 
 export const Title = styled.h1`
   font-size: 48px;
-  color: #3a3a3a;
+  color: ${props => props.theme.colors.primaryText};
 `;
 
 export const CardContainer = styled.section`
@@ -26,10 +27,12 @@ export const CardContainer = styled.section`
 `;
 
 export const Card = styled.div`
-  background: ${({ total }: CardProps): string => (total ? '#FF872C' : '#fff')};
+  background: ${({ total, theme }: CardProps): string =>
+    total ? theme.colors.secondary : theme.colors.default};
   padding: 22px 32px;
   border-radius: 5px;
-  color: ${({ total }: CardProps): string => (total ? '#fff' : '#363F5F')};
+  color: ${({ total, theme }: CardProps): string =>
+    total ? theme.colors.secondaryText : theme.colors.primaryText};
 
   header {
     display: flex;
@@ -64,7 +67,7 @@ export const TableContainer = styled.section`
     border-spacing: 0 8px;
 
     th {
-      color: #969cb3;
+      color: ${props => props.theme.colors.defaultText};
       font-weight: normal;
       padding: 20px 32px;
       text-align: left;
@@ -81,28 +84,28 @@ export const TableContainer = styled.section`
     td {
       padding: 20px 32px;
       border: 0;
-      background: #fff;
+      background: ${props => props.theme.colors.default};
       font-size: 16px;
       font-weight: normal;
-      color: #969cb3;
+      color: ${props => props.theme.colors.defaultText};
 
       &.title {
-        color: #363f5f;
+        color: ${props => props.theme.colors.primaryText};
       }
 
       &.income {
-        color: #12a454;
+        color: ${props => props.theme.colors.success};
       }
 
       &.outcome {
-        color: #e83f5b;
+        color: ${props => props.theme.colors.danger};
       }
 
       svg {
         transition: color 0.2s;
         &:hover {
           cursor: pointer;
-          color: #e83f5b;
+          color: ${props => props.theme.colors.danger};
         }
       }
     }
@@ -132,10 +135,10 @@ export const PaginationContainer = styled.section`
 
       &.previous_page,
       &.next_page {
-        background: #ff872c;
+        background: ${props => props.theme.colors.secondary};
 
         a {
-          color: #fff;
+          color: ${props => props.theme.colors.secondaryText};
         }
       }
 
@@ -148,19 +151,20 @@ export const PaginationContainer = styled.section`
       }
 
       &.active_page {
-        background: #ff872c;
+        background: ${props => props.theme.colors.secondary};
 
         a {
-          color: #fff;
+          color: ${props => props.theme.colors.secondaryText};
           border-top: 0;
           border-bottom: 0;
-          border: 1px solid ${rgba('#363f5f', 0.075)};
+          border: 1px solid
+            ${props => rgba(props.theme.colors.primaryText, 0.075)};
         }
       }
 
       a {
         cursor: pointer;
-        color: #363f5f;
+        color: ${props => props.theme.colors.primaryText};
         padding: 10px 20px;
         display: flex;
         justify-content: center;
@@ -169,14 +173,14 @@ export const PaginationContainer = styled.section`
       }
 
       &:hover:not(.disabled) {
-        background: ${tint(0.2, '#ff872c')};
+        background: ${props => tint(0.2, props.theme.colors.secondary)};
         a {
-          color: #fff;
+          color: ${props => props.theme.colors.secondaryText};
         }
       }
 
       &.disabled {
-        background ${shade(0.05, '#ff872c')};
+        background: ${props => shade(0.05, props.theme.colors.secondary)};
 
         a {
           cursor: not-allowed;
@@ -190,11 +194,11 @@ export const Delete = styled(Tooltip)`
   width: 20px;
 
   span {
-    background: #e83f5b;
-    color: #fff;
+    background: ${props => props.theme.colors.danger};
+    color: ${props => props.theme.colors.dangerText};
 
     &::before {
-      border-color: #e83f5b transparent;
+      border-color: ${props => props.theme.colors.danger} transparent;
     }
   }
 `;
