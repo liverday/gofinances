@@ -12,7 +12,7 @@ export const Container = styled.div<ContainerProps>`
   background: ${props => props.theme.colors.background};
   border-radius: 10px;
   padding: 16px;
-  border: 2px solid ${props => props.theme.colors.secondaryText};
+  border: 2px solid ${props => props.theme.colors.primary};
   color: ${props => props.theme.colors.defaultText};
   width: 100%;
 

@@ -10,7 +10,7 @@ const dark: Theme = {
     success: '#12a454',
     danger: '#e83f5b',
 
-    primaryText: '#363f5f',
+    primaryText: '#F0F2F5',
     secondaryText: '#fff',
     defaultText: '#969cb3',
     successText: '#fff',

@@ -21,6 +21,10 @@ export const Content = styled.div`
   form {
     width: 100%;
     margin: 50px 0;
+
+    div + div {
+      margin-top: 10px;
+    }
   }
 
   > a {
