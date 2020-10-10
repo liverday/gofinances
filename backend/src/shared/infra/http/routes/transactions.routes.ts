@@ -19,8 +19,10 @@ transactionsRouter.use(isAuthenticated);
 
 transactionsRouter.get('/', async (request, response) => {
   const { id } = request.user;
-  const { sort, direction } = request.query;
+  const { sort, direction, page, pageSize } = request.query;
 
+  let take = 6;
+  let skip = 0;
   let order: object = {
     created_at: 'DESC',
   };
@@ -31,18 +33,28 @@ transactionsRouter.get('/', async (request, response) => {
     };
   }
 
+  if (page && pageSize) {
+    take = parseInt(pageSize as string, 10);
+    skip = take * (parseInt(page as string, 10) - 1);
+
+    if (skip < 0) skip = 0;
+  }
+
   const transactionRepository = getCustomRepository(TransactionsRepository);
 
-  const transactions = await transactionRepository.find({
+  const [transactions, total] = await transactionRepository.findAndCount({
     where: { user_id: id },
     relations: ['category'],
     order,
+    take,
+    skip,
   });
 
   const balance = await transactionRepository.getBalance(id);
 
   return response.json({
     transactions,
+    pageCount: Math.ceil(total / take),
     balance,
   });
 });

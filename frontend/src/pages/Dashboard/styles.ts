@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import { rgba, tint, shade } from 'polished';
 import Tooltip from '../../components/Tooltip';
 
 interface CardProps {
@@ -57,6 +57,7 @@ export const Card = styled.div`
 
 export const TableContainer = styled.section`
   margin-top: 64px;
+  min-height: 530px;
 
   table {
     width: 100%;
@@ -112,6 +113,75 @@ export const TableContainer = styled.section`
 
     td:last-child {
       border-radius: 0 8px 8px 0;
+    }
+  }
+`;
+
+export const PaginationContainer = styled.section`
+  display: flex;
+  margin-top: 10px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  ul {
+    display: flex;
+    li {
+      display: inline-block;
+      height: 50px;
+      transition: all 0.2s linear;
+
+      &.previous_page,
+      &.next_page {
+        background: #ff872c;
+
+        a {
+          color: #fff;
+        }
+      }
+
+      &.previous_page {
+        border-radius: 5px 0 0 5px;
+      }
+
+      &.next_page {
+        border-radius: 0 5px 5px 0;
+      }
+
+      &.active_page {
+        background: #ff872c;
+
+        a {
+          color: #fff;
+          border-top: 0;
+          border-bottom: 0;
+          border: 1px solid ${rgba('#363f5f', 0.075)};
+        }
+      }
+
+      a {
+        cursor: pointer;
+        color: #363f5f;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+
+      &:hover:not(.disabled) {
+        background: ${tint(0.2, '#ff872c')};
+        a {
+          color: #fff;
+        }
+      }
+
+      &.disabled {
+        background ${shade(0.05, '#ff872c')};
+
+        a {
+          cursor: not-allowed;
+        }
+      }
     }
   }
 `;

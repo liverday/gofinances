@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
-import { FiTrash, FiChevronUp, FiChevronDown } from 'react-icons/fi';
+import {
+  FiTrash,
+  FiChevronUp,
+  FiChevronDown,
+  FiChevronLeft,
+  FiChevronRight,
+} from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import ReactPaginate from 'react-paginate';
 
 import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
@@ -19,6 +26,7 @@ import {
   Card,
   TableContainer,
   Delete,
+  PaginationContainer,
 } from './styles';
 
 interface Transaction {
@@ -38,9 +46,19 @@ interface Balance {
   total: number;
 }
 
+interface Pagination {
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
 interface Sort {
   sort: string;
   direction: string;
+}
+
+interface PaginationChange {
+  selected: number;
 }
 
 const Dashboard: React.FC = () => {
@@ -53,48 +71,77 @@ const Dashboard: React.FC = () => {
     };
   });
 
+  const [pagination, setPagination] = useState<Pagination>(() => {
+    return {
+      page: 1,
+      pageSize: 6,
+      total: 0,
+    };
+  });
+
   useEffect(() => {
-    async function loadTransactions({ sort, direction }: Sort): Promise<void> {
+    async function loadTransactions(
+      { sort, direction }: Sort,
+      { page, pageSize }: Omit<Pagination, 'total'>,
+    ): Promise<void> {
       const { data } = await api.get('/transactions', {
         params: {
           sort,
           direction,
+          page,
+          pageSize,
         },
       });
 
       setTransactions(data.transactions);
       setBalance(data.balance);
+      setPagination(oldPagination => ({
+        ...oldPagination,
+        total: data.pageCount,
+      }));
     }
 
-    loadTransactions(sortData);
-  }, [sortData]);
+    loadTransactions(sortData, {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+    });
+  }, [sortData, pagination.page, pagination.pageSize]);
 
-  const handleDelete = async (
-    transactionToDelete: Transaction,
-  ): Promise<void> => {
-    await api.delete(`/transactions/${transactionToDelete.id}`);
+  const handleDelete = useCallback(
+    async (transactionToDelete: Transaction): Promise<void> => {
+      await api.delete(`/transactions/${transactionToDelete.id}`);
 
-    const filteredTransactions = transactions.filter(
-      transaction => transaction.id !== transactionToDelete.id,
-    );
-    setTransactions(filteredTransactions);
+      const filteredTransactions = transactions.filter(
+        transaction => transaction.id !== transactionToDelete.id,
+      );
+      setTransactions(filteredTransactions);
 
-    const newValue =
-      balance[transactionToDelete.type] - transactionToDelete.value;
+      const newValue =
+        balance[transactionToDelete.type] - transactionToDelete.value;
 
-    const newBalance = {
-      ...balance,
-      [transactionToDelete.type]: newValue,
-    };
+      const newBalance = {
+        ...balance,
+        [transactionToDelete.type]: newValue,
+      };
 
-    newBalance.total = newBalance.income - newBalance.outcome;
+      newBalance.total = newBalance.income - newBalance.outcome;
 
-    setBalance(newBalance);
-    toast.success('Transação apagada com sucesso!');
-  };
+      setBalance(newBalance);
+      toast.success('Transação apagada com sucesso!');
+    },
+    [balance, transactions],
+  );
 
   const handleSort = useCallback((sort: string, direction: string) => {
     setSortData({ sort, direction });
+    setPagination(oldPagination => ({ ...oldPagination, page: 1 }));
+  }, []);
+
+  const handlePaginate = useCallback((selectedItem: PaginationChange) => {
+    setPagination(oldPagination => ({
+      ...oldPagination,
+      page: selectedItem.selected + 1,
+    }));
   }, []);
 
   const sortIcon =
@@ -175,6 +222,22 @@ const Dashboard: React.FC = () => {
             </tbody>
           </table>
         </TableContainer>
+        <PaginationContainer className="pagination">
+          <ReactPaginate
+            previousLabel={<FiChevronLeft />}
+            nextLabel={<FiChevronRight />}
+            pageCount={pagination.total}
+            onPageChange={handlePaginate}
+            forcePage={pagination.page - 1}
+            disableInitialCallback
+            marginPagesDisplayed={0}
+            pageRangeDisplayed={3}
+            containerClassName="pagination"
+            activeClassName="active_page"
+            nextClassName="next_page"
+            previousClassName="previous_page"
+          />
+        </PaginationContainer>
       </Container>
     </>
   );
