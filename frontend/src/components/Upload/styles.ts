@@ -38,7 +38,8 @@ export const DropContainer = styled.div.attrs({
 `;
 
 const messageColors = (theme: Theme): any => ({
-  default: theme.colors.primary,
+  default:
+    theme.title === 'light' ? theme.colors.primary : theme.colors.secondary,
   error: theme.colors.danger,
   success: theme.colors.success,
 });

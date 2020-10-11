@@ -74,7 +74,7 @@ const Dashboard: React.FC = () => {
   const [pagination, setPagination] = useState<Pagination>(() => {
     return {
       page: 1,
-      pageSize: 6,
+      pageSize: 5,
       total: 0,
     };
   });

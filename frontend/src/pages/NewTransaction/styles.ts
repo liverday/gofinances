@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { tint } from 'polished';
+import { tint, shade } from 'polished';
 
 export const Container = styled.div`
   width: 100%;
@@ -24,8 +24,14 @@ export const NewTransactonContainer = styled.section`
 
   form {
     .form-group {
-      background: ${props => tint(0.95, props.theme.colors.defaultText)};
-      border-color: ${props => tint(0.95, props.theme.colors.defaultText)};
+      background: ${props =>
+        props.theme.title === 'light'
+          ? tint(0.95, props.theme.colors.defaultText)
+          : shade(0.25, props.theme.colors.default)};
+      border-color: ${props =>
+        props.theme.title === 'light'
+          ? tint(0.95, props.theme.colors.defaultText)
+          : shade(0.25, props.theme.colors.default)};
     }
 
     > div + div {

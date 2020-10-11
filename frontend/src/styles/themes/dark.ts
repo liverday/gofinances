@@ -3,16 +3,16 @@ import Theme from './theme';
 const dark: Theme = {
   title: 'dark',
   colors: {
-    primary: '#5636d3',
-    secondary: '#ff872c',
-    default: '#fff',
+    primary: '#424242',
+    secondary: '#D75D00',
+    default: '#505050',
     background: '#333',
-    success: '#12a454',
-    danger: '#e83f5b',
+    success: '#19E475',
+    danger: '#E83F4D',
 
     primaryText: '#F0F2F5',
     secondaryText: '#fff',
-    defaultText: '#969cb3',
+    defaultText: '#9A9A9A',
     successText: '#fff',
     dangerText: '#fff',
   },

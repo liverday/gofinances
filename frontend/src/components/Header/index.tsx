@@ -1,13 +1,14 @@
+/* eslint-disable react/jsx-wrap-multilines */
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiSun, FiMoon } from 'react-icons/fi';
 import { shade } from 'polished';
 
 import ReactSwitch from 'react-switch';
 
 import { useTheme } from '../../hooks/theme';
 
-import { Container } from './styles';
+import { Container, IconSwitcherContainer } from './styles';
 
 import Logo from '../../assets/logo.svg';
 
@@ -39,13 +40,21 @@ const Header: React.FC<HeaderProps> = ({ size = 'large' }: HeaderProps) => {
             onChange={() => toggleTheme()}
             checked={theme.title === 'dark'}
             className="theme-switcher"
-            checkedIcon={false}
-            uncheckedIcon={false}
-            height={10}
-            width={40}
+            checkedIcon={
+              <IconSwitcherContainer>
+                <FiMoon color={theme.colors.defaultText} />
+              </IconSwitcherContainer>
+            }
+            uncheckedIcon={
+              <IconSwitcherContainer align="flex-end">
+                <FiSun color={theme.colors.secondary} />
+              </IconSwitcherContainer>
+            }
+            height={20}
+            width={50}
             handleDiameter={20}
             offColor={shade(0.15, theme.colors.primary)}
-            onColor={theme.colors.secondary}
+            onColor={shade(0.2, theme.colors.primary)}
           />
 
           <Link to="/">

@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { tint, rgba } from 'polished';
+import { tint, shade, rgba } from 'polished';
 
 interface TypeInputProps {
   transactionType: 'income' | 'outcome';
@@ -8,12 +8,24 @@ interface TypeInputProps {
 
 const typeInputVariation = {
   income: css`
-    border-color: ${props => rgba(props.theme.colors.success, 0.1)};
-    background: ${props => rgba(props.theme.colors.success, 0.1)};
+    border-color: ${props =>
+      props.theme.title === 'light'
+        ? rgba(props.theme.colors.success, 0.1)
+        : rgba(props.theme.colors.success, 0.2)};
+    background: ${props =>
+      props.theme.title === 'light'
+        ? rgba(props.theme.colors.success, 0.1)
+        : rgba(props.theme.colors.success, 0.2)};
   `,
   outcome: css`
-    border-color: ${props => rgba(props.theme.colors.danger, 0.1)};
-    background: ${props => rgba(props.theme.colors.danger, 0.1)};
+    border-color: ${props =>
+      props.theme.title === 'light'
+        ? rgba(props.theme.colors.danger, 0.1)
+        : rgba(props.theme.colors.danger, 0.3)};
+    background: ${props =>
+      props.theme.title === 'light'
+        ? rgba(props.theme.colors.danger, 0.1)
+        : rgba(props.theme.colors.danger, 0.3)};
   `,
 };
 
@@ -25,7 +37,11 @@ export const TypeInput = styled.div<TypeInputProps>`
   background: transparent;
   padding: 16px;
   border-radius: 5px;
-  border: 1px solid ${props => tint(0.8, props.theme.colors.defaultText)};
+  border: 1px solid
+    ${props =>
+      props.theme.title === 'light'
+        ? tint(0.8, props.theme.colors.defaultText)
+        : shade(0.1, props.theme.colors.default)};
 
   & + div {
     margin-left: 8px;

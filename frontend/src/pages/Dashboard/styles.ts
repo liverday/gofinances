@@ -60,7 +60,7 @@ export const Card = styled.div`
 
 export const TableContainer = styled.section`
   margin-top: 64px;
-  min-height: 530px;
+  min-height: 455px;
 
   table {
     width: 100%;
@@ -122,7 +122,7 @@ export const TableContainer = styled.section`
 
 export const PaginationContainer = styled.section`
   display: flex;
-  margin-top: 10px;
+  margin-top: 20px;
   justify-content: center;
   align-items: center;
   width: 100%;

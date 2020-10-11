@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { tint } from 'polished';
 
 interface ContainerProps {
@@ -17,7 +17,7 @@ export const Container = styled.div<ContainerProps>`
     align-items: center;
     justify-content: space-between;
 
-    div {
+    > div {
       display: flex;
       align-items: center;
 
@@ -70,4 +70,21 @@ export const Container = styled.div<ContainerProps>`
       }
     }
   }
+`;
+
+interface IconSwitcherContainerProps {
+  align?: string;
+}
+
+export const IconSwitcherContainer = styled.div<IconSwitcherContainerProps>`
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 5px;
+
+  ${({ align }) =>
+    align &&
+    css`
+      justify-content: ${align};
+    `}
 `;
