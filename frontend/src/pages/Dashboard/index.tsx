@@ -7,6 +7,7 @@ import {
   FiChevronLeft,
   FiChevronRight,
 } from 'react-icons/fi';
+import * as Icons from 'react-icons/all';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 
@@ -19,6 +20,7 @@ import api from '../../services/api';
 import Header from '../../components/Header';
 
 import formatValue from '../../utils/formatValue';
+import { useTheme } from '../../hooks/theme';
 
 import {
   Container,
@@ -27,6 +29,7 @@ import {
   TableContainer,
   Delete,
   PaginationContainer,
+  TableBodyColumn,
 } from './styles';
 
 interface Transaction {
@@ -36,7 +39,12 @@ interface Transaction {
   formattedValue: string;
   formattedDate: string;
   type: 'income' | 'outcome';
-  category: { title: string };
+  category: {
+    title: string;
+    icon: string;
+    background_color_light: string;
+    background_color_dark: string;
+  };
   created_at: Date;
 }
 
@@ -62,6 +70,7 @@ interface PaginationChange {
 }
 
 const Dashboard: React.FC = () => {
+  const { theme } = useTheme();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [balance, setBalance] = useState<Balance>({} as Balance);
   const [sortData, setSortData] = useState<Sort>(() => {
@@ -107,41 +116,28 @@ const Dashboard: React.FC = () => {
     });
   }, [sortData, pagination.page, pagination.pageSize]);
 
-  const handleDelete = useCallback(
-    async (transactionToDelete: Transaction): Promise<void> => {
-      await api.delete(`/transactions/${transactionToDelete.id}`);
-
-      const filteredTransactions = transactions.filter(
-        transaction => transaction.id !== transactionToDelete.id,
-      );
-      setTransactions(filteredTransactions);
-
-      const newValue =
-        balance[transactionToDelete.type] - transactionToDelete.value;
-
-      const newBalance = {
-        ...balance,
-        [transactionToDelete.type]: newValue,
-      };
-
-      newBalance.total = newBalance.income - newBalance.outcome;
-
-      setBalance(newBalance);
-      toast.success('Transação apagada com sucesso!');
-    },
-    [balance, transactions],
-  );
-
-  const handleSort = useCallback((sort: string, direction: string) => {
-    setSortData({ sort, direction });
-    setPagination(oldPagination => ({ ...oldPagination, page: 1 }));
-  }, []);
-
   const handlePaginate = useCallback((selectedItem: PaginationChange) => {
     setPagination(oldPagination => ({
       ...oldPagination,
       page: selectedItem.selected + 1,
     }));
+  }, []);
+
+  const handleDelete = useCallback(
+    async (transactionToDelete: Transaction): Promise<void> => {
+      await api.delete(`/transactions/${transactionToDelete.id}`);
+
+      toast.success('Transação apagada com sucesso!');
+      handlePaginate({
+        selected: 0,
+      });
+    },
+    [handlePaginate],
+  );
+
+  const handleSort = useCallback((sort: string, direction: string) => {
+    setSortData({ sort, direction });
+    setPagination(oldPagination => ({ ...oldPagination, page: 1 }));
   }, []);
 
   const sortIcon =
@@ -198,27 +194,45 @@ const Dashboard: React.FC = () => {
 
             <tbody>
               {transactions &&
-                transactions.map(transaction => (
-                  <tr key={transaction.id}>
-                    <td className="title">{transaction.title}</td>
-                    <td className={transaction.type}>
-                      {transaction.type === 'outcome' && '- '}
-                      {formatValue(transaction.value)}
-                    </td>
-                    <td>{transaction.category.title}</td>
-                    <td>
-                      {format(new Date(transaction.created_at), 'dd/MM/yyyy')}
-                    </td>
-                    <td>
-                      <Delete title="Apagar transação">
-                        <FiTrash
-                          size={20}
-                          onClick={() => handleDelete(transaction)}
-                        />
-                      </Delete>
-                    </td>
-                  </tr>
-                ))}
+                transactions.map(transaction => {
+                  const [, iconName] = transaction.category.icon.split('/');
+                  const CategoryIcon = (Icons as any)[iconName];
+                  const categoryBackgroundKey = `background_color_${theme.title}`;
+                  const categoryBackground =
+                    transaction.category[
+                      categoryBackgroundKey as
+                        | 'background_color_light'
+                        | 'background_color_dark'
+                    ];
+                  return (
+                    <tr key={transaction.id}>
+                      <TableBodyColumn
+                        categoryBackground={categoryBackground}
+                        className="title"
+                      >
+                        {transaction.title}
+                      </TableBodyColumn>
+                      <TableBodyColumn className={transaction.type}>
+                        {formatValue(transaction.value)}
+                      </TableBodyColumn>
+                      <TableBodyColumn className="category">
+                        <CategoryIcon size={20} color={categoryBackground} />
+                        {transaction.category.title}
+                      </TableBodyColumn>
+                      <TableBodyColumn>
+                        {format(new Date(transaction.created_at), 'dd/MM/yyyy')}
+                      </TableBodyColumn>
+                      <TableBodyColumn>
+                        <Delete title="Apagar transação">
+                          <FiTrash
+                            size={20}
+                            onClick={() => handleDelete(transaction)}
+                          />
+                        </Delete>
+                      </TableBodyColumn>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </TableContainer>

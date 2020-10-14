@@ -20,6 +20,12 @@ class Category {
   @Column()
   icon: string;
 
+  @Column()
+  background_color_light: string;
+
+  @Column()
+  background_color_dark: string;
+
   @CreateDateColumn()
   created_at: Date;
 

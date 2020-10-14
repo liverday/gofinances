@@ -164,7 +164,7 @@ describe('Transaction', () => {
 
     const { identifiers } = await categoriesRepository.insert({
       title: 'Salary',
-      icon: 'fas fa-asterisk',
+      icon: 'fa/FaAsterisk',
     });
 
     const insertedCategoryId = identifiers[0].id;

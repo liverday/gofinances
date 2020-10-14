@@ -45,7 +45,9 @@ class CreateTransactionService {
     } else {
       const categoryToSave = categoryRepository.create({
         title: category,
-        icon: 'fas fa-asterisk',
+        icon: 'fa/FaAsterisk',
+        background_color_light: '#9A9A9A',
+        background_color_dark: '#363f5f',
       });
 
       await categoryRepository.save(categoryToSave);

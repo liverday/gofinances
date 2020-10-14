@@ -67,7 +67,9 @@ class ImportTransactionsService {
     const newCategories = categoryRepository.create(
       categoriesToAdd.map(category => ({
         title: category,
-        icon: 'fas fa-asterisk',
+        icon: 'fa/FaAsterisk',
+        background_color_light: '#9A9A9A',
+        background_color_dark: '#363f5f',
       })),
     );
 

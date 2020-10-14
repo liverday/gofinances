@@ -1,4 +1,4 @@
-import styled, { ThemeProps } from 'styled-components';
+import styled, { ThemeProps, css } from 'styled-components';
 import { rgba, tint, shade } from 'polished';
 import Tooltip from '../../components/Tooltip';
 import Theme from '../../styles/themes/theme';
@@ -58,6 +58,57 @@ export const Card = styled.div`
   }
 `;
 
+interface TableBodyColumnProps {
+  categoryBackground?: string;
+}
+
+export const TableBodyColumn = styled.td<TableBodyColumnProps>`
+  padding: 20px 32px;
+  border: 0;
+  background: ${props => props.theme.colors.default};
+  border-left-width: 8px;
+  border-left-style: solid;
+  border-left-color: ${props => props.theme.colors.default};
+  font-size: 16px;
+  font-weight: normal;
+  color: ${props => props.theme.colors.defaultText};
+  transition: border-left-width 0.2s ease-in;
+
+  &.title {
+    color: ${props => props.theme.colors.primaryText};
+  }
+
+  &.category {
+    svg {
+      vertical-align: sub;
+      margin-right: 10px;
+    }
+  }
+
+  &.income {
+    color: ${props => props.theme.colors.success};
+  }
+
+  &.outcome {
+    color: ${props => props.theme.colors.danger};
+  }
+
+  svg {
+    transition: color 0.2s;
+    &:hover {
+      cursor: pointer;
+      color: ${props => props.theme.colors.danger};
+    }
+  }
+
+  ${props =>
+    props.categoryBackground &&
+    css`
+      border-left-color: ${props.categoryBackground};
+      color: ${props.categoryBackground};
+    `}
+`;
+
 export const TableContainer = styled.section`
   margin-top: 64px;
   min-height: 455px;
@@ -69,7 +120,7 @@ export const TableContainer = styled.section`
     th {
       color: ${props => props.theme.colors.defaultText};
       font-weight: normal;
-      padding: 20px 32px;
+      padding: 20px 42px;
       text-align: left;
       font-size: 16px;
       line-height: 24px;
@@ -78,35 +129,6 @@ export const TableContainer = styled.section`
       svg {
         vertical-align: middle;
         cursor: pointer;
-      }
-    }
-
-    td {
-      padding: 20px 32px;
-      border: 0;
-      background: ${props => props.theme.colors.default};
-      font-size: 16px;
-      font-weight: normal;
-      color: ${props => props.theme.colors.defaultText};
-
-      &.title {
-        color: ${props => props.theme.colors.primaryText};
-      }
-
-      &.income {
-        color: ${props => props.theme.colors.success};
-      }
-
-      &.outcome {
-        color: ${props => props.theme.colors.danger};
-      }
-
-      svg {
-        transition: color 0.2s;
-        &:hover {
-          cursor: pointer;
-          color: ${props => props.theme.colors.danger};
-        }
       }
     }
 

@@ -34,6 +34,9 @@ const Header: React.FC<HeaderProps> = ({ size = 'large' }: HeaderProps) => {
             <NavLink activeClassName="active-link" to="/import">
               Importar
             </NavLink>
+            <NavLink activeClassName="active-link" to="/config">
+              Configurações
+            </NavLink>
           </nav>
 
           <ReactSwitch

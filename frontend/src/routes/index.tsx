@@ -9,6 +9,7 @@ import SignUp from '../pages/SignUp';
 import Dashboard from '../pages/Dashboard';
 import Import from '../pages/Import';
 import NewTransaction from '../pages/NewTransaction';
+import Config from '../pages/Config';
 
 interface PrivateRouteProps extends RouteProps {
   component: React.ComponentType;
@@ -41,7 +42,8 @@ const Routes: React.FC = () => (
     <PrivateRoute path="/dashboard" component={Dashboard} />
     <PrivateRoute path="/new-transaction" component={NewTransaction} />
     <PrivateRoute path="/import" component={Import} />
-    <Redirect from="*" to="/" />
+    <PrivateRoute path="/config" component={Config} />
+    <Redirect from="*" to="/dashboard" />
   </Switch>
 );
 
