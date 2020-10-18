@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import Category from '../../categories/entities/Category';
 
 import Transaction from '../../transactions/entities/Transaction';
 
@@ -31,6 +32,9 @@ class User {
 
   @OneToMany(() => Transaction, transaction => transaction.user)
   transactions: Transaction[];
+
+  @OneToMany(() => Category, category => category.user)
+  categories: Category[];
 }
 
 export default User;

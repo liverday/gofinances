@@ -4,7 +4,7 @@ import AppError from '../../../shared/errors/AppError';
 import TransactionsRepository from '../repositories/TransactionsRepository';
 
 import Transaction from '../entities/Transaction';
-import Category from '../entities/Category';
+import Category from '../../categories/entities/Category';
 
 interface Request {
   user_id: string;
@@ -29,7 +29,7 @@ class CreateTransactionService {
     if (type === 'outcome') {
       const { total } = await transactionRepository.getBalance(user_id);
 
-      if (total < value) throw new AppError('Insufficient Balance', 400);
+      if (total < value) throw new AppError('Insufficient Balance');
     }
 
     const findCategoryByTitle = await categoryRepository.findOne({
@@ -44,10 +44,11 @@ class CreateTransactionService {
       categoryId = findCategoryByTitle.id;
     } else {
       const categoryToSave = categoryRepository.create({
+        user_id,
         title: category,
         icon: 'fa/FaAsterisk',
-        background_color_light: '#9A9A9A',
-        background_color_dark: '#363f5f',
+        background_color_light: '#363f5f',
+        background_color_dark: '#9A9A9A',
       });
 
       await categoryRepository.save(categoryToSave);

@@ -3,7 +3,7 @@ import fs from 'fs';
 import { getCustomRepository, getRepository, In } from 'typeorm';
 import Transaction from '../entities/Transaction';
 import TransactionsRepository from '../repositories/TransactionsRepository';
-import Category from '../entities/Category';
+import Category from '../../categories/entities/Category';
 
 interface Request {
   user_id: string;
@@ -66,10 +66,11 @@ class ImportTransactionsService {
 
     const newCategories = categoryRepository.create(
       categoriesToAdd.map(category => ({
+        user_id,
         title: category,
         icon: 'fa/FaAsterisk',
-        background_color_light: '#9A9A9A',
-        background_color_dark: '#363f5f',
+        background_color_light: '#363f5f',
+        background_color_dark: '#9A9A9A',
       })),
     );
 

@@ -17,7 +17,7 @@ class DeleteTransactionService {
       where: { id, user_id },
     });
 
-    if (!transaction) throw new AppError('Transaction not found', 400);
+    if (!transaction) throw new AppError('Transaction not found');
 
     await transactionRepository.remove(transaction);
   }

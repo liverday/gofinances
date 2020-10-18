@@ -8,6 +8,6 @@
   "entities": ["./src/modules/*/entities/*.ts"],
   "migrations": ["./src/shared/infra/typeorm/migrations/*.ts"],
   "cli": {
-    "migrationsDir": "./src/shared/infra/typeorm/migration"
+    "migrationsDir": "./src/shared/infra/typeorm/migrations"
   }
 }

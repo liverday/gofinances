@@ -5,9 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
-import Transaction from './Transaction';
+import Transaction from '../../transactions/entities/Transaction';
+import User from '../../users/entities/User';
 
 @Entity('categories')
 class Category {
@@ -34,6 +37,13 @@ class Category {
 
   @OneToMany(() => Transaction, transaction => transaction.category)
   transactions: Transaction[];
+
+  @Column()
+  user_id: string;
+
+  @ManyToOne(() => User, user => user.categories)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }
 
 export default Category;

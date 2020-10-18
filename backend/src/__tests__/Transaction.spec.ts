@@ -6,7 +6,7 @@ import { Connection, getRepository, getConnection } from 'typeorm';
 import createConnection from '../shared/infra/typeorm';
 
 import Transaction from '../modules/transactions/entities/Transaction';
-import Category from '../modules/transactions/entities/Category';
+import Category from '../modules/categories/entities/Category';
 
 import app from '../app';
 
