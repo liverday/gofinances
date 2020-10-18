@@ -15,6 +15,7 @@
     "react-dom": "^16.13.1",
     "react-dropzone": "^10.2.2",
     "react-icons": "^3.11.0",
+    "react-loading": "^2.0.3",
     "react-paginate": "^6.5.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",

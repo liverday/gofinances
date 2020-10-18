@@ -37,6 +37,13 @@ export const NewTransactonContainer = styled.section`
     > div + div {
       margin-top: 10px;
     }
+
+    button {
+      > div {
+        display: flex;
+        justify-content: center;
+      }
+    }
   }
 `;
 

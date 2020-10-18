@@ -1,9 +1,12 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { toast } from 'react-toastify';
+import ReactLoading from 'react-loading';
 import { Container, Title, NewTransactonContainer, Footer } from './styles';
+
+import { useTheme } from '../../hooks/theme';
 
 import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErrors';
@@ -23,11 +26,14 @@ interface NewTransactionFormData {
 }
 
 const NewTransaction: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { theme } = useTheme();
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(async (formData: NewTransactionFormData) => {
     try {
       formRef.current?.setErrors({});
+      setIsLoading(true);
 
       const schema = Yup.object().shape({
         title: Yup.string().required('Título é obrigatório'),
@@ -49,6 +55,7 @@ const NewTransaction: React.FC = () => {
 
       toast.success('Transação cadastrada com sucesso');
       formRef.current?.reset();
+      setIsLoading(false);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -63,6 +70,8 @@ const NewTransaction: React.FC = () => {
           'Não foi possível cadastrar a saída, cheque se há salvo disponível e tente novamente',
         );
       }
+
+      setIsLoading(false);
     }
   }, []);
 
@@ -103,7 +112,20 @@ const NewTransaction: React.FC = () => {
             />
 
             <Footer>
-              <Button type="submit">Enviar</Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? (
+                  <div>
+                    <ReactLoading
+                      type="spin"
+                      color={theme.colors.secondaryText}
+                      width={25}
+                      height={25}
+                    />
+                  </div>
+                ) : (
+                  'Enviar'
+                )}
+              </Button>
             </Footer>
           </Form>
         </NewTransactonContainer>

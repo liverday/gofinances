@@ -88,7 +88,7 @@ const Dashboard: React.FC = () => {
     };
   });
 
-  useEffect(() => {
+  const reloadTransactions = useCallback(() => {
     async function loadTransactions(
       { sort, direction }: Sort,
       { page, pageSize }: Omit<Pagination, 'total'>,
@@ -116,6 +116,10 @@ const Dashboard: React.FC = () => {
     });
   }, [sortData, pagination.page, pagination.pageSize]);
 
+  useEffect(() => {
+    reloadTransactions();
+  }, [reloadTransactions]);
+
   const handlePaginate = useCallback((selectedItem: PaginationChange) => {
     setPagination(oldPagination => ({
       ...oldPagination,
@@ -123,22 +127,20 @@ const Dashboard: React.FC = () => {
     }));
   }, []);
 
+  const handleSort = useCallback((sort: string, direction: string) => {
+    setSortData({ sort, direction });
+    setPagination(oldPagination => ({ ...oldPagination, page: 1 }));
+  }, []);
+
   const handleDelete = useCallback(
     async (transactionToDelete: Transaction): Promise<void> => {
       await api.delete(`/transactions/${transactionToDelete.id}`);
 
       toast.success('Transação apagada com sucesso!');
-      handlePaginate({
-        selected: 0,
-      });
+      reloadTransactions();
     },
-    [handlePaginate],
+    [reloadTransactions],
   );
-
-  const handleSort = useCallback((sort: string, direction: string) => {
-    setSortData({ sort, direction });
-    setPagination(oldPagination => ({ ...oldPagination, page: 1 }));
-  }, []);
 
   const sortIcon =
     sortData.direction === 'DESC' ? (
