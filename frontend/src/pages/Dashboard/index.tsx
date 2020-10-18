@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { format } from 'date-fns';
-import {
-  FiTrash,
-  FiChevronUp,
-  FiChevronDown,
-  FiChevronLeft,
-  FiChevronRight,
-} from 'react-icons/fi';
-import * as Icons from 'react-icons/all';
 import { toast } from 'react-toastify';
-import ReactPaginate from 'react-paginate';
+import { FiPieChart, FiList } from 'react-icons/fi';
 
 import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
@@ -18,59 +9,22 @@ import total from '../../assets/total.svg';
 import api from '../../services/api';
 
 import Header from '../../components/Header';
+import DashboardTableView from './DashboardTableView';
+import DashboardGraphView from './DashboardGraphView';
 
 import formatValue from '../../utils/formatValue';
-import { useTheme } from '../../hooks/theme';
 
 import {
-  Container,
-  CardContainer,
-  Card,
-  TableContainer,
-  Delete,
-  PaginationContainer,
-  TableBodyColumn,
-} from './styles';
+  Transaction,
+  Balance,
+  Pagination,
+  PaginationChange,
+  Sort,
+} from '../../services/interfaces';
 
-interface Transaction {
-  id: string;
-  title: string;
-  value: number;
-  formattedValue: string;
-  formattedDate: string;
-  type: 'income' | 'outcome';
-  category: {
-    title: string;
-    icon: string;
-    background_color_light: string;
-    background_color_dark: string;
-  };
-  created_at: Date;
-}
-
-interface Balance {
-  income: number;
-  outcome: number;
-  total: number;
-}
-
-interface Pagination {
-  page: number;
-  pageSize: number;
-  total: number;
-}
-
-interface Sort {
-  sort: string;
-  direction: string;
-}
-
-interface PaginationChange {
-  selected: number;
-}
+import { Container, CardContainer, Card, TitleAndViewSelector } from './styles';
 
 const Dashboard: React.FC = () => {
-  const { theme } = useTheme();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [balance, setBalance] = useState<Balance>({} as Balance);
   const [sortData, setSortData] = useState<Sort>(() => {
@@ -79,6 +33,8 @@ const Dashboard: React.FC = () => {
       direction: 'DESC',
     };
   });
+
+  const [view, setView] = useState('table');
 
   const [pagination, setPagination] = useState<Pagination>(() => {
     return {
@@ -142,16 +98,6 @@ const Dashboard: React.FC = () => {
     [reloadTransactions],
   );
 
-  const sortIcon =
-    sortData.direction === 'DESC' ? (
-      <FiChevronDown
-        size={20}
-        onClick={() => handleSort('created_at', 'ASC')}
-      />
-    ) : (
-      <FiChevronUp size={20} onClick={() => handleSort('created_at', 'DESC')} />
-    );
-
   return (
     <>
       <Header />
@@ -182,78 +128,35 @@ const Dashboard: React.FC = () => {
           </Card>
         </CardContainer>
 
-        <TableContainer>
-          <table>
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th>Preço</th>
-                <th>Categoria</th>
-                <th>Data {sortIcon}</th>
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
+        <TitleAndViewSelector>
+          <h1>Dashboard</h1>
 
-            <tbody>
-              {transactions &&
-                transactions.map(transaction => {
-                  const [, iconName] = transaction.category.icon.split('/');
-                  const CategoryIcon = (Icons as any)[iconName];
-                  const categoryBackgroundKey = `background_color_${theme.title}`;
-                  const categoryBackground =
-                    transaction.category[
-                      categoryBackgroundKey as
-                        | 'background_color_light'
-                        | 'background_color_dark'
-                    ];
-                  return (
-                    <tr key={transaction.id}>
-                      <TableBodyColumn
-                        categoryBackground={categoryBackground}
-                        className="title"
-                      >
-                        {transaction.title}
-                      </TableBodyColumn>
-                      <TableBodyColumn className={transaction.type}>
-                        {formatValue(transaction.value)}
-                      </TableBodyColumn>
-                      <TableBodyColumn className="category">
-                        <CategoryIcon size={20} color={categoryBackground} />
-                        {transaction.category.title}
-                      </TableBodyColumn>
-                      <TableBodyColumn>
-                        {format(new Date(transaction.created_at), 'dd/MM/yyyy')}
-                      </TableBodyColumn>
-                      <TableBodyColumn>
-                        <Delete title="Apagar transação">
-                          <FiTrash
-                            size={20}
-                            onClick={() => handleDelete(transaction)}
-                          />
-                        </Delete>
-                      </TableBodyColumn>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </TableContainer>
-        <PaginationContainer className="pagination">
-          <ReactPaginate
-            previousLabel={<FiChevronLeft />}
-            nextLabel={<FiChevronRight />}
-            pageCount={pagination.total}
-            onPageChange={handlePaginate}
-            forcePage={pagination.page - 1}
-            disableInitialCallback
-            marginPagesDisplayed={0}
-            pageRangeDisplayed={3}
-            containerClassName="pagination"
-            activeClassName="active_page"
-            nextClassName="next_page"
-            previousClassName="previous_page"
+          <div>
+            <FiList
+              size={25}
+              className={view === 'table' ? 'active' : undefined}
+              onClick={() => setView('table')}
+            />
+            <FiPieChart
+              size={25}
+              className={view === 'graph' ? 'active' : undefined}
+              onClick={() => setView('graph')}
+            />
+          </div>
+        </TitleAndViewSelector>
+
+        {view === 'table' && (
+          <DashboardTableView
+            transactions={transactions}
+            pagination={pagination}
+            sort={sortData}
+            handlePaginate={handlePaginate}
+            handleSort={handleSort}
+            handleDelete={handleDelete}
           />
-        </PaginationContainer>
+        )}
+
+        {view === 'graph' && <DashboardGraphView />}
       </Container>
     </>
   );

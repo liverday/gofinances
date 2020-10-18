@@ -1,0 +1,132 @@
+import React from 'react';
+import { format } from 'date-fns';
+import * as Icons from 'react-icons/all';
+
+import ReactPaginate from 'react-paginate';
+import formatValue from '../../../utils/formatValue';
+import { useTheme } from '../../../hooks/theme';
+import {
+  Pagination,
+  PaginationChange,
+  Sort,
+  Transaction,
+} from '../../../services/interfaces';
+
+import {
+  TableContainer,
+  TableBodyColumn,
+  Delete,
+  PaginationContainer,
+} from './styles';
+
+interface DashboardTableViewProps {
+  transactions: Transaction[];
+  pagination: Pagination;
+  sort: Sort;
+  handleSort(sort: string, direction: string): void;
+  handlePaginate(selectedItem: PaginationChange): void;
+  handleDelete(transaction: Transaction): void;
+}
+
+const DashboardTableView: React.FC<DashboardTableViewProps> = ({
+  transactions,
+  pagination,
+  sort,
+  handleSort,
+  handlePaginate,
+  handleDelete,
+}) => {
+  const { theme } = useTheme();
+
+  const sortIcon =
+    sort.direction === 'DESC' ? (
+      <Icons.FiChevronDown
+        size={20}
+        onClick={() => handleSort('created_at', 'ASC')}
+      />
+    ) : (
+      <Icons.FiChevronUp
+        size={20}
+        onClick={() => handleSort('created_at', 'DESC')}
+      />
+    );
+
+  return (
+    <>
+      <TableContainer>
+        <table>
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Preço</th>
+              <th>Categoria</th>
+              <th>Data {sortIcon}</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {transactions &&
+              transactions.map(transaction => {
+                const [, iconName] = transaction.category.icon.split('/');
+                const CategoryIcon = (Icons as any)[iconName];
+                const categoryBackgroundKey = `background_color_${theme.title}`;
+                const categoryBackground =
+                  transaction.category[
+                    categoryBackgroundKey as
+                      | 'background_color_light'
+                      | 'background_color_dark'
+                  ];
+                return (
+                  <tr key={transaction.id}>
+                    <TableBodyColumn
+                      categoryBackground={categoryBackground}
+                      className="title"
+                    >
+                      {transaction.title}
+                    </TableBodyColumn>
+                    <TableBodyColumn className={transaction.type}>
+                      {formatValue(transaction.value)}
+                    </TableBodyColumn>
+                    <TableBodyColumn className="category">
+                      <CategoryIcon size={20} color={categoryBackground} />
+                      {transaction.category.title}
+                    </TableBodyColumn>
+                    <TableBodyColumn>
+                      {format(new Date(transaction.created_at), 'dd/MM/yyyy')}
+                    </TableBodyColumn>
+                    <TableBodyColumn>
+                      <Delete title="Apagar transação">
+                        <Icons.FiTrash
+                          size={20}
+                          onClick={() => handleDelete(transaction)}
+                        />
+                      </Delete>
+                    </TableBodyColumn>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </TableContainer>
+      <PaginationContainer className="pagination">
+        <ReactPaginate
+          previousLabel={<Icons.FiChevronLeft />}
+          nextLabel={<Icons.FiChevronRight />}
+          pageCount={pagination.total}
+          onPageChange={handlePaginate}
+          forcePage={pagination.page - 1}
+          disableInitialCallback
+          marginPagesDisplayed={0}
+          pageRangeDisplayed={3}
+          containerClassName="pagination"
+          activeClassName="active_page"
+          nextClassName="next_page"
+          previousClassName="previous_page"
+        />
+      </PaginationContainer>
+    </>
+  );
+};
+
+export default DashboardTableView;
