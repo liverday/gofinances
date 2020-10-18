@@ -12,6 +12,9 @@ import app from '../app';
 
 let connection: Connection;
 let token: string;
+let user: {
+  id: string;
+};
 
 describe('Transaction', () => {
   beforeAll(async () => {
@@ -35,6 +38,7 @@ describe('Transaction', () => {
     });
 
     token = loginResponse.body.token;
+    user = loginResponse.body.user;
   });
 
   beforeEach(async () => {
@@ -163,6 +167,7 @@ describe('Transaction', () => {
     const categoriesRepository = getRepository(Category);
 
     const { identifiers } = await categoriesRepository.insert({
+      user_id: user.id,
       title: 'Salary',
       icon: 'fa/FaAsterisk',
     });

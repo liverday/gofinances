@@ -7,6 +7,7 @@ import Category from '../../../../modules/categories/entities/Category';
 
 import CreateCategoryService from '../../../../modules/categories/services/CreateCategoryService';
 import UpdateCategoryService from '../../../../modules/categories/services/UpdateCategoryService';
+import DeleteCategoryService from '../../../../modules/categories/services/DeleteCategoryService';
 
 const categoriesRouter = Router();
 categoriesRouter.use(isAuthenticated);
@@ -25,7 +26,7 @@ categoriesRouter.get('/', async (req, res) => {
 });
 
 categoriesRouter.post('/', async (req, res) => {
-  const { id } = req.user;
+  const { id: user_id } = req.user;
   const {
     title,
     icon,
@@ -36,7 +37,7 @@ categoriesRouter.post('/', async (req, res) => {
   const createCategoryService = new CreateCategoryService();
 
   const category = await createCategoryService.execute({
-    user_id: id,
+    user_id,
     title,
     icon,
     background_color_light,
@@ -47,7 +48,8 @@ categoriesRouter.post('/', async (req, res) => {
 });
 
 categoriesRouter.put('/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id: user_id } = req.user;
+  const { id: category_id } = req.params;
   const {
     title,
     icon,
@@ -58,7 +60,8 @@ categoriesRouter.put('/:id', async (req, res) => {
   const updateCategoryService = new UpdateCategoryService();
 
   const category = await updateCategoryService.execute({
-    category_id: id,
+    user_id,
+    category_id,
     title,
     icon,
     background_color_light,
@@ -68,6 +71,16 @@ categoriesRouter.put('/:id', async (req, res) => {
   return res.json(category);
 });
 
-// TODO: Criar serviço de delete
+categoriesRouter.delete('/:id', async (req, res) => {
+  const { id: user_id } = req.user;
+  const { id: category_id } = req.params;
+  const { isConfirmed = false } = req.body;
+
+  const deleteCategoryService = new DeleteCategoryService();
+
+  await deleteCategoryService.execute({ user_id, category_id, isConfirmed });
+
+  return res.status(204).send();
+});
 
 export default categoriesRouter;

@@ -4,6 +4,7 @@ import AppError from '../../../shared/errors/AppError';
 import Category from '../entities/Category';
 
 interface Request {
+  user_id: string;
   category_id: string;
   title: string;
   icon: string;
@@ -13,6 +14,7 @@ interface Request {
 
 class UpdateCategoryService {
   async execute({
+    user_id,
     category_id,
     title,
     icon,
@@ -21,7 +23,12 @@ class UpdateCategoryService {
   }: Request): Promise<Category> {
     const categoryRepository = getRepository(Category);
 
-    let category = await categoryRepository.findOne(category_id);
+    let category = await categoryRepository.findOne({
+      where: {
+        user_id,
+        category_id,
+      },
+    });
 
     if (!category) throw new AppError('Category not found');
 

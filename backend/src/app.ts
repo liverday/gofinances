@@ -7,6 +7,7 @@ import 'express-async-errors';
 
 import routes from './shared/infra/http/routes';
 import AppError from './shared/errors/AppError';
+import ConfirmActionError from './shared/errors/ConfirmActionError';
 
 import createConnection from './shared/infra/typeorm';
 
@@ -21,6 +22,12 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
   if (err instanceof AppError) {
     return response.status(err.statusCode).json({
       status: 'error',
+      message: err.message,
+    });
+  }
+  if (err instanceof ConfirmActionError) {
+    return response.status(err.statusCode).json({
+      status: 'confirm',
       message: err.message,
     });
   }
