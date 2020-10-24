@@ -1,6 +1,4 @@
-import styled, { ThemeProps, css } from 'styled-components';
-import { rgba, tint, shade } from 'polished';
-import Tooltip from '../../components/Tooltip';
+import styled, { ThemeProps } from 'styled-components';
 import Theme from '../../styles/themes/theme';
 
 interface CardProps extends ThemeProps<Theme> {
@@ -77,7 +75,7 @@ export const TitleAndViewSelector = styled.section`
 
     svg {
       padding-bottom: 5px;
-      border-bottom: 2px solid ${props => props.theme.colors.background};
+      border-bottom: 2px solid transparent;
       color: ${props => props.theme.colors.defaultText};
 
       & + svg {

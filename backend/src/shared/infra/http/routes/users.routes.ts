@@ -1,21 +1,10 @@
 import { Router } from 'express';
 
-import CreateUserService from '../../../../modules/users/services/CreateUserService';
+import UsersController from '../controllers/users/UsersController';
 
 const usersRouter = Router();
+const usersController = new UsersController();
 
-usersRouter.post('/', async (request, response) => {
-  const { name, email, password } = request.body;
-
-  const createUser = new CreateUserService();
-
-  const user = await createUser.execute({
-    name,
-    email,
-    password,
-  });
-
-  return response.json(user);
-});
+usersRouter.post('/', usersController.store);
 
 export default usersRouter;

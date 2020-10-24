@@ -23,7 +23,7 @@ class DeleteCategoryService {
     const category = await categoryRepository.findOne({
       where: {
         user_id,
-        category_id,
+        id: category_id,
       },
     });
 
@@ -37,12 +37,15 @@ class DeleteCategoryService {
       },
     });
 
-    if (count > 0 && !isConfirmed)
-      throw new ConfirmActionError(
-        'Tem certeza que deseja executar essa operação? Todas as transações vinculadas à esta categoria serão apagadas!',
-      );
+    if (count > 0) {
+      if (!isConfirmed)
+        throw new ConfirmActionError(
+          'Tem certeza que deseja executar essa operação? Todas as transações vinculadas à esta categoria serão apagadas!',
+        );
 
-    await transactionRepository.remove(transactions);
+      await transactionRepository.remove(transactions);
+    }
+
     await categoryRepository.remove(category);
 
     return true;

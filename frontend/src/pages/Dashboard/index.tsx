@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { toast } from 'react-toastify';
 import { FiPieChart, FiList } from 'react-icons/fi';
 
 import income from '../../assets/income.svg';
@@ -14,89 +13,22 @@ import DashboardGraphView from './DashboardGraphView';
 
 import formatValue from '../../utils/formatValue';
 
-import {
-  Transaction,
-  Balance,
-  Pagination,
-  PaginationChange,
-  Sort,
-} from '../../services/interfaces';
+import { Balance } from '../../services/interfaces';
 
 import { Container, CardContainer, Card, TitleAndViewSelector } from './styles';
 
 const Dashboard: React.FC = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [balance, setBalance] = useState<Balance>({} as Balance);
-  const [sortData, setSortData] = useState<Sort>(() => {
-    return {
-      sort: 'created_at',
-      direction: 'DESC',
-    };
-  });
-
   const [view, setView] = useState('table');
 
-  const [pagination, setPagination] = useState<Pagination>(() => {
-    return {
-      page: 1,
-      pageSize: 5,
-      total: 0,
-    };
-  });
-
-  const reloadTransactions = useCallback(() => {
-    async function loadTransactions(
-      { sort, direction }: Sort,
-      { page, pageSize }: Omit<Pagination, 'total'>,
-    ): Promise<void> {
-      const { data } = await api.get('/transactions', {
-        params: {
-          sort,
-          direction,
-          page,
-          pageSize,
-        },
-      });
-
-      setTransactions(data.transactions);
-      setBalance(data.balance);
-      setPagination(oldPagination => ({
-        ...oldPagination,
-        total: data.pageCount,
-      }));
-    }
-
-    loadTransactions(sortData, {
-      page: pagination.page,
-      pageSize: pagination.pageSize,
-    });
-  }, [sortData, pagination.page, pagination.pageSize]);
+  const reloadBalance = useCallback(async () => {
+    const { data } = await api.get('/transactions/balance');
+    setBalance(data);
+  }, []);
 
   useEffect(() => {
-    reloadTransactions();
-  }, [reloadTransactions]);
-
-  const handlePaginate = useCallback((selectedItem: PaginationChange) => {
-    setPagination(oldPagination => ({
-      ...oldPagination,
-      page: selectedItem.selected + 1,
-    }));
-  }, []);
-
-  const handleSort = useCallback((sort: string, direction: string) => {
-    setSortData({ sort, direction });
-    setPagination(oldPagination => ({ ...oldPagination, page: 1 }));
-  }, []);
-
-  const handleDelete = useCallback(
-    async (transactionToDelete: Transaction): Promise<void> => {
-      await api.delete(`/transactions/${transactionToDelete.id}`);
-
-      toast.success('Transação apagada com sucesso!');
-      reloadTransactions();
-    },
-    [reloadTransactions],
-  );
+    reloadBalance();
+  }, [reloadBalance]);
 
   return (
     <>
@@ -146,14 +78,7 @@ const Dashboard: React.FC = () => {
         </TitleAndViewSelector>
 
         {view === 'table' && (
-          <DashboardTableView
-            transactions={transactions}
-            pagination={pagination}
-            sort={sortData}
-            handlePaginate={handlePaginate}
-            handleSort={handleSort}
-            handleDelete={handleDelete}
-          />
+          <DashboardTableView onTransactionDeleted={() => reloadBalance()} />
         )}
 
         {view === 'graph' && <DashboardGraphView />}

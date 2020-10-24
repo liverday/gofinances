@@ -26,7 +26,7 @@ class UpdateCategoryService {
     let category = await categoryRepository.findOne({
       where: {
         user_id,
-        category_id,
+        id: category_id,
       },
     });
 

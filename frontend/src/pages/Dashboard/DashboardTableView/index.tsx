@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import * as Icons from 'react-icons/all';
 
 import ReactPaginate from 'react-paginate';
 import formatValue from '../../../utils/formatValue';
 import { useTheme } from '../../../hooks/theme';
+
+import api from '../../../services/api';
+
 import {
   Pagination,
   PaginationChange,
@@ -19,27 +23,86 @@ import {
   PaginationContainer,
 } from './styles';
 
-interface DashboardTableViewProps {
-  transactions: Transaction[];
-  pagination: Pagination;
-  sort: Sort;
-  handleSort(sort: string, direction: string): void;
-  handlePaginate(selectedItem: PaginationChange): void;
-  handleDelete(transaction: Transaction): void;
+interface DashboardTablewViewProps {
+  onTransactionDeleted(): void;
 }
 
-const DashboardTableView: React.FC<DashboardTableViewProps> = ({
-  transactions,
-  pagination,
-  sort,
-  handleSort,
-  handlePaginate,
-  handleDelete,
+const DashboardTableView: React.FC<DashboardTablewViewProps> = ({
+  onTransactionDeleted,
 }) => {
   const { theme } = useTheme();
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [sortData, setSortData] = useState<Sort>(() => {
+    return {
+      sort: 'created_at',
+      direction: 'DESC',
+    };
+  });
+
+  const [pagination, setPagination] = useState<Pagination>(() => {
+    return {
+      page: 1,
+      pageSize: 5,
+      total: 0,
+    };
+  });
+
+  const reloadTransactions = useCallback(() => {
+    async function loadTransactions(
+      { sort, direction }: Sort,
+      { page, pageSize }: Omit<Pagination, 'total'>,
+    ): Promise<void> {
+      const { data } = await api.get('/transactions', {
+        params: {
+          sort,
+          direction,
+          page,
+          pageSize,
+        },
+      });
+
+      setTransactions(data.transactions);
+      setPagination(oldPagination => ({
+        ...oldPagination,
+        total: data.pageCount,
+      }));
+    }
+
+    loadTransactions(sortData, {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+    });
+  }, [sortData, pagination.page, pagination.pageSize]);
+
+  useEffect(() => {
+    reloadTransactions();
+  }, [reloadTransactions]);
+
+  const handlePaginate = useCallback((selectedItem: PaginationChange) => {
+    setPagination(oldPagination => ({
+      ...oldPagination,
+      page: selectedItem.selected + 1,
+    }));
+  }, []);
+
+  const handleSort = useCallback((sort: string, direction: string) => {
+    setSortData({ sort, direction });
+    setPagination(oldPagination => ({ ...oldPagination, page: 1 }));
+  }, []);
+
+  const handleDelete = useCallback(
+    async (transactionToDelete: Transaction): Promise<void> => {
+      await api.delete(`/transactions/${transactionToDelete.id}`);
+
+      toast.success('Transação apagada com sucesso!');
+      reloadTransactions();
+      onTransactionDeleted();
+    },
+    [reloadTransactions, onTransactionDeleted],
+  );
 
   const sortIcon =
-    sort.direction === 'DESC' ? (
+    sortData.direction === 'DESC' ? (
       <Icons.FiChevronDown
         size={20}
         onClick={() => handleSort('created_at', 'ASC')}
