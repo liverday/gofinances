@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -9,11 +9,16 @@ import { Container, Title, NewTransactonContainer, Footer } from './styles';
 import { useTheme } from '../../hooks/theme';
 
 import api from '../../services/api';
+import { Category } from '../../services/interfaces';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import Header from '../../components/Header';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Select from '../../components/Select';
+import IconOption from './IconOption';
+import IconSingleValue from './IconSingleValue';
+
 import TransactionTypeSelector, {
   SelectedType,
 } from '../../components/TransactionTypeSelector';
@@ -27,8 +32,19 @@ interface NewTransactionFormData {
 
 const NewTransaction: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
   const { theme } = useTheme();
   const formRef = useRef<FormHandles>(null);
+
+  useEffect(() => {
+    async function fetchCategories(): Promise<void> {
+      const { data } = await api.get('/categories');
+
+      setCategories(data);
+    }
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = useCallback(async (formData: NewTransactionFormData) => {
     try {
@@ -50,7 +66,7 @@ const NewTransaction: React.FC = () => {
         title: formData.title,
         type: formData.type,
         value: parseFloat(formData.value),
-        category: formData.category,
+        category_id: formData.category,
       });
 
       toast.success('Transação cadastrada com sucesso');
@@ -98,10 +114,18 @@ const NewTransaction: React.FC = () => {
 
             <TransactionTypeSelector name="type" onSelect={handleTypeSelect} />
 
-            <Input
+            {/* <Input
               name="category"
               containerClassName="form-group"
               placeholder="Categoria"
+            /> */}
+
+            <Select
+              name="category"
+              keyField="id"
+              options={categories}
+              getOptionLabel={category => category.title}
+              components={{ Option: IconOption, SingleValue: IconSingleValue }}
             />
 
             <Input

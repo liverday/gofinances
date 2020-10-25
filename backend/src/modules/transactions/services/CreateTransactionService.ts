@@ -11,7 +11,7 @@ interface Request {
   title: string;
   type: 'income' | 'outcome';
   value: number;
-  category: string;
+  category_id: string;
 }
 class CreateTransactionService {
   public async execute({
@@ -19,7 +19,7 @@ class CreateTransactionService {
     title,
     type,
     value,
-    category,
+    category_id,
   }: Request): Promise<Transaction> {
     const categoryRepository = getRepository(Category);
     const transactionRepository = getCustomRepository(TransactionsRepository);
@@ -32,36 +32,16 @@ class CreateTransactionService {
       if (total < value) throw new AppError('Insufficient Balance');
     }
 
-    const findCategoryByTitle = await categoryRepository.findOne({
-      where: {
-        title: category,
-      },
-    });
+    const category = await categoryRepository.findOne(category_id);
 
-    let categoryId: string;
-
-    if (findCategoryByTitle) {
-      categoryId = findCategoryByTitle.id;
-    } else {
-      const categoryToSave = categoryRepository.create({
-        user_id,
-        title: category,
-        icon: 'fa/FaAsterisk',
-        background_color_light: '#363f5f',
-        background_color_dark: '#9A9A9A',
-      });
-
-      await categoryRepository.save(categoryToSave);
-
-      categoryId = categoryToSave.id;
-    }
+    if (!category) throw new AppError('Invalid Category');
 
     const transaction = transactionRepository.create({
       user_id,
       title,
       type,
       value,
-      category_id: categoryId,
+      category_id,
     });
 
     await transactionRepository.save(transaction);

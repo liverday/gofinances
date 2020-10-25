@@ -5,13 +5,18 @@ export interface Transaction {
   formattedValue: string;
   formattedDate: string;
   type: 'income' | 'outcome';
-  category: {
-    title: string;
-    icon: string;
-    background_color_light: string;
-    background_color_dark: string;
-  };
+  category: Category;
   created_at: Date;
+}
+
+export interface Category {
+  id: string;
+  title: string;
+  icon: string;
+  background_color_light: string;
+  background_color_dark: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Balance {

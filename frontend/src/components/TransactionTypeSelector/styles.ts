@@ -36,7 +36,7 @@ export const TypeInput = styled.div<TypeInputProps>`
   text-align: center;
   background: transparent;
   padding: 16px;
-  border-radius: 5px;
+  border-radius: 10px;
   border: 1px solid
     ${props =>
       props.theme.title === 'light'

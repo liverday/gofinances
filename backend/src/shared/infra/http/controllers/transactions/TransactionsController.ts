@@ -8,7 +8,7 @@ import DeleteTransactionService from '../../../../../modules/transactions/servic
 export default class TransactionsController {
   async store(req: Request, res: Response): Promise<Response> {
     const { id } = req.user;
-    const { title, value, type, category } = req.body;
+    const { title, value, type, category_id } = req.body;
 
     const createTransaction = new CreateTransactionService();
 
@@ -17,7 +17,7 @@ export default class TransactionsController {
       title,
       value,
       type,
-      category,
+      category_id,
     });
 
     return res.json(transaction);
