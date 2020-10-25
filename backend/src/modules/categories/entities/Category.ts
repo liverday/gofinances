@@ -44,6 +44,8 @@ class Category {
   @ManyToOne(() => User, user => user.categories)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  transactionsCount?: number;
 }
 
 export default Category;

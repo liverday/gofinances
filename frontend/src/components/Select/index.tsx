@@ -46,6 +46,7 @@ const Select: React.FC<Props> = ({ name, keyField = 'value', ...rest }) => {
       defaultValue={defaultValue}
       classNamePrefix="react-select"
       styles={getCustomSelectOptions(theme)}
+      placeholder="Selecione uma opção"
       ref={selectRef}
       {...rest}
     />

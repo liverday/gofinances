@@ -8,6 +8,10 @@ export default function getCustomSelectOptions(theme: Theme): any {
       ...provided,
       color: theme.colors.primaryText,
     }),
+    placeholder: (provided: CSSProperties) => ({
+      ...provided,
+      color: theme.colors.defaultText,
+    }),
     control: (provided: CSSProperties) => {
       return {
         ...provided,

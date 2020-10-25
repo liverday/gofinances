@@ -1,10 +1,13 @@
-import React from 'react';
-import { FiShoppingCart } from 'react-icons/fi';
+import React, { useState, useEffect, useCallback } from 'react';
+import * as Icons from 'react-icons/all';
 import { Line, Doughnut } from 'react-chartjs-2';
+
+import api from '../../../services/api';
 
 import { useTheme } from '../../../hooks/theme';
 import formatValue from '../../../utils/formatValue';
 import getChartOptions from '../../../utils/getChartOptions';
+import serializeGraphData from '../../../utils/serializeGraphData';
 
 import {
   Container,
@@ -13,19 +16,52 @@ import {
   GraphGridContainer,
 } from './styles';
 
-const DashboardGraphView: React.FC = () => {
-  const { theme } = useTheme();
-  const chartOptions = getChartOptions(theme);
+import { Category, GraphData } from '../../../services/interfaces';
 
-  const donutData = {
-    labels: ['Red', 'Green', 'Yellow'],
-    datasets: [
-      {
-        data: [300, 50, 100],
-        borderColor: theme.colors.default,
-      },
-    ],
-  };
+interface OverviewData {
+  income: string;
+  outcome: string;
+  category?: Category;
+}
+
+const DashboardGraphView: React.FC = () => {
+  const [donutData, setDonutData] = useState<GraphData>(() => {
+    return {
+      labels: [],
+      datasets: [],
+    };
+  });
+
+  const [overviewData, setOverviewData] = useState<OverviewData>(() => {
+    return {
+      income: '0',
+      outcome: '0',
+      category: undefined,
+    };
+  });
+
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    async function loadData(): Promise<void> {
+      const promises = Promise.all([
+        api.get('/transactions/overview-data'),
+        api.get('/transactions/count-by-category'),
+      ]);
+
+      const [overview, donut] = await promises;
+      const donutSerializedData = serializeGraphData(
+        theme,
+        donut.data,
+        'donut',
+      );
+
+      setDonutData(donutSerializedData);
+      setOverviewData(overview.data);
+    }
+
+    loadData();
+  }, [theme]);
 
   const lineData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -39,7 +75,7 @@ const DashboardGraphView: React.FC = () => {
         data: [65, 59, 80, 81, 56, 55, 40],
       },
       {
-        label: 'My First dataset',
+        label: 'My Second dataset',
         fill: false,
         backgroundColor: '#E83F4D',
         borderColor: '#E83F4D',
@@ -49,6 +85,13 @@ const DashboardGraphView: React.FC = () => {
     ],
   };
 
+  let CategoryIcon: any;
+
+  if (overviewData.category) {
+    const [, iconName] = overviewData.category.icon.split('/');
+    CategoryIcon = (Icons as any)[iconName];
+  }
+
   return (
     <Container>
       <OverviewGridContainer>
@@ -56,24 +99,30 @@ const DashboardGraphView: React.FC = () => {
           <header>
             <p>Maior entrada</p>
           </header>
-          <h2>{formatValue(50.0)}</h2>
+          <h2>{formatValue(parseFloat(overviewData.income))}</h2>
         </Widget>
         <Widget borderLeftColor={theme.colors.danger}>
           <header>
             <p>Maior saida</p>
           </header>
-          <h2>{formatValue(50.0)}</h2>
+          <h2>{formatValue(parseFloat(overviewData.outcome))}</h2>
         </Widget>
         <Widget borderLeftColor={theme.colors.secondary}>
           <header>
             <p>Categ. mais frequente</p>
           </header>
-          <h2>
-            <FiShoppingCart
-              color={theme.title === 'dark' ? '#F38EDC' : '#9C107B'}
-            />{' '}
-            <span>Comida</span>
-          </h2>
+          {overviewData.category && (
+            <h2>
+              <CategoryIcon
+                color={
+                  theme.title === 'dark'
+                    ? overviewData.category.background_color_dark
+                    : overviewData.category.background_color_light
+                }
+              />
+              <span>{overviewData.category.title}</span>
+            </h2>
+          )}
         </Widget>
       </OverviewGridContainer>
       <GraphGridContainer>
@@ -83,7 +132,7 @@ const DashboardGraphView: React.FC = () => {
           </header>
 
           <div>
-            <Line data={lineData} options={chartOptions} />
+            <Line data={lineData} options={getChartOptions(theme, 'line')} />
           </div>
         </Widget>
         <Widget>
@@ -91,7 +140,10 @@ const DashboardGraphView: React.FC = () => {
             <p>Transações por categoria</p>
           </header>
           <div>
-            <Doughnut data={donutData} options={chartOptions} />
+            <Doughnut
+              data={donutData}
+              options={getChartOptions(theme, 'donut')}
+            />
           </div>
         </Widget>
       </GraphGridContainer>

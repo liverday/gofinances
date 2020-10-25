@@ -44,8 +44,13 @@ export const Widget = styled.div<WidgetProps>`
     font-weight: normal;
     margin-top: 15px;
 
+    svg {
+      vertical-align: middle;
+    }
+
     > span {
       margin-left: 10px;
+      vertical-align: middle;
     }
   }
 `;

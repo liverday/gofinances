@@ -11,7 +11,11 @@ GoFinances é uma aplicação Mobile/Web com o objetivo de controlar suas finan�
     - React Native
     - React Switch
     - React Paginate
+    - React Select
+    - React Datepicker
+- Unform
 - Styled Components
+- Chart JS
 - Typescript
 - Axios
 - Date-FNS

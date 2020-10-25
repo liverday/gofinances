@@ -17,6 +17,7 @@ export interface Category {
   background_color_dark: string;
   created_at: string;
   updated_at: string;
+  transactionsCount?: number;
 }
 
 export interface Balance {
@@ -38,4 +39,9 @@ export interface Sort {
 
 export interface PaginationChange {
   selected: number;
+}
+
+export interface GraphData {
+  labels: string[];
+  datasets: any[];
 }
