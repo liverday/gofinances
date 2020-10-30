@@ -79,7 +79,7 @@ export const TitleAndViewSelector = styled.section`
       color: ${props => props.theme.colors.defaultText};
 
       & + svg {
-        margin-left: 10px;
+        margin-left: 5px;
       }
 
       transition: border-bottom 0.2s ease;

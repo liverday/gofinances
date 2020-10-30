@@ -33,6 +33,29 @@ export const Widget = styled.div<WidgetProps>`
       font-size: 16px;
       color: ${props => props.theme.colors.defaultText};
     }
+
+    > div.flex {
+      display: flex;
+      flex-flow: row;
+
+      span {
+        padding-bottom: 3px;
+        border-bottom: 2px solid transparent;
+        width: 20px;
+        text-align: center;
+        transition: border-color 0.2s ease;
+
+        & + span {
+          margin-left: 10px;
+        }
+
+        &:hover,
+        &.active {
+          cursor: pointer;
+          border-color: ${props => props.theme.colors.secondary};
+        }
+      }
+    }
   }
 
   > div {

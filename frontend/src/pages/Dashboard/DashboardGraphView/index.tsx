@@ -24,6 +24,10 @@ interface OverviewData {
   category?: Category;
 }
 
+interface LineGraphFilter {
+  period: string;
+}
+
 const DashboardGraphView: React.FC = () => {
   const [donutData, setDonutData] = useState<GraphData>(() => {
     return {
@@ -38,6 +42,10 @@ const DashboardGraphView: React.FC = () => {
       outcome: '0',
       category: undefined,
     };
+  });
+
+  const [lineFilters, setLineFilters] = useState<LineGraphFilter>({
+    period: 'week',
   });
 
   const { theme } = useTheme();
@@ -92,6 +100,18 @@ const DashboardGraphView: React.FC = () => {
     CategoryIcon = (Icons as any)[iconName];
   }
 
+  const handleLineFilters = useCallback(
+    (period: string) => {
+      const newLineFilters = {
+        ...lineFilters,
+        period,
+      };
+
+      setLineFilters(newLineFilters);
+    },
+    [lineFilters],
+  );
+
   return (
     <Container>
       <OverviewGridContainer>
@@ -129,6 +149,23 @@ const DashboardGraphView: React.FC = () => {
         <Widget>
           <header>
             <p>Entrada / Saída</p>
+
+            <div className="flex">
+              <span
+                className={lineFilters.period === 'week' ? 'active' : undefined}
+                onClick={() => handleLineFilters('week')}
+              >
+                S
+              </span>
+              <span
+                className={
+                  lineFilters.period === 'month' ? 'active' : undefined
+                }
+                onClick={() => handleLineFilters('month')}
+              >
+                M
+              </span>
+            </div>
           </header>
 
           <div>
