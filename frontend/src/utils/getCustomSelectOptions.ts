@@ -26,6 +26,10 @@ export default function getCustomSelectOptions(theme: Theme): any {
         borderColor: theme.colors.default,
       };
     },
+    valueContainer: (provided: CSSProperties) => ({
+      ...provided,
+      padding: '2px 16px',
+    }),
     singleValue: (provided: CSSProperties) => ({
       ...provided,
       color: theme.colors.primaryText,

@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import { tint } from 'polished';
 import { GraphData, Category } from '../services/interfaces';
 import Theme from '../styles/themes/theme';
 
@@ -40,7 +42,24 @@ export default function serializeGraphData(
     };
   }
   return {
-    labels: [],
-    datasets: [],
+    labels: data.income.map((entry: any[]) => format(new Date(entry[0]), 'dd')),
+    datasets: [
+      {
+        label: 'Entradas',
+        fill: false,
+        backgroundColor: theme.colors.success,
+        borderColor: tint(0.1, theme.colors.success),
+        borderJoinStyle: 'miter',
+        data: data.income.map((entry: any[]) => entry[1]),
+      },
+      {
+        label: 'Saídas',
+        fill: false,
+        borderColor: tint(0.1, theme.colors.danger),
+        backgroundColor: theme.colors.danger,
+        borderJoinStyle: 'miter',
+        data: data.outcome.map((entry: any[]) => entry[1]),
+      },
+    ],
   };
 }

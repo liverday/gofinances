@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect, useCallback } from 'react';
 import * as Icons from 'react-icons/all';
 import { Line, Doughnut } from 'react-chartjs-2';
@@ -35,6 +37,12 @@ const DashboardGraphView: React.FC = () => {
       datasets: [],
     };
   });
+  const [lineData, setLineData] = useState<GraphData>(() => {
+    return {
+      labels: [],
+      datasets: [],
+    };
+  });
 
   const [overviewData, setOverviewData] = useState<OverviewData>(() => {
     return {
@@ -55,43 +63,25 @@ const DashboardGraphView: React.FC = () => {
       const promises = Promise.all([
         api.get('/transactions/overview-data'),
         api.get('/transactions/count-by-category'),
+        api.get(`/transactions/balance-graph?period=${lineFilters.period}`),
       ]);
 
-      const [overview, donut] = await promises;
+      const [overview, donut, line] = await promises;
       const donutSerializedData = serializeGraphData(
         theme,
         donut.data,
         'donut',
       );
 
+      const lineSerializedData = serializeGraphData(theme, line.data, 'line');
+
       setDonutData(donutSerializedData);
+      setLineData(lineSerializedData);
       setOverviewData(overview.data);
     }
 
     loadData();
-  }, [theme]);
-
-  const lineData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      {
-        label: 'My First dataset',
-        fill: false,
-        backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)',
-        borderJoinStyle: 'miter',
-        data: [65, 59, 80, 81, 56, 55, 40],
-      },
-      {
-        label: 'My Second dataset',
-        fill: false,
-        backgroundColor: '#E83F4D',
-        borderColor: '#E83F4D',
-        borderJoinStyle: 'miter',
-        data: [20, 39, 40, 41, 26, 25, 20],
-      },
-    ],
-  };
+  }, [theme, lineFilters.period]);
 
   let CategoryIcon: any;
 
