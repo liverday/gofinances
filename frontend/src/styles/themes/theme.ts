@@ -8,6 +8,7 @@ export default interface Theme {
     background: string;
     success: string;
     danger: string;
+    overlay: string;
 
     primaryText: string;
     secondaryText: string;

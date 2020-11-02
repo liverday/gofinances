@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 
+import Tooltip from '../../components/Tooltip';
+import Button from '../../components/Button';
+
 export const Container = styled.div`
   width: 100%;
   max-width: 1120px;
@@ -29,11 +32,6 @@ export const TableContainer = styled.section`
       font-size: 16px;
       line-height: 24px;
       height: 30px;
-
-      svg {
-        vertical-align: middle;
-        cursor: pointer;
-      }
     }
 
     td:first-child {
@@ -76,6 +74,41 @@ export const TableBodyColumn = styled.td`
   &.outcome {
     color: ${props => props.theme.colors.danger};
   }
+`;
+
+interface SquareProps {
+  background: string;
+}
+
+export const Square = styled.div<SquareProps>`
+  padding: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 5px;
+  background-color: ${props => props.background};
+`;
+
+export const ColorInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-left: 10px;
+  }
+`;
+
+export const Delete = styled(Tooltip)`
+  width: 20px;
+  height: 20px;
+
+  span {
+    background: ${props => props.theme.colors.danger};
+    color: ${props => props.theme.colors.dangerText};
+
+    &::before {
+      border-color: ${props => props.theme.colors.danger} transparent;
+    }
+  }
 
   svg {
     transition: color 0.2s;
@@ -83,5 +116,17 @@ export const TableBodyColumn = styled.td`
       cursor: pointer;
       color: ${props => props.theme.colors.danger};
     }
+  }
+`;
+
+export const NewCategoryButton = styled(Button)`
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  margin-top: 0;
+
+  svg {
+    vertical-align: normal;
   }
 `;

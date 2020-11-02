@@ -90,11 +90,15 @@ export default class CategoriesController {
   async delete(req: Request, res: Response): Promise<Response> {
     const { id: user_id } = req.user;
     const { id: category_id } = req.params;
-    const { isConfirmed = false } = req.body;
+    const { isConfirmed = false } = req.query;
 
     const deleteCategoryService = new DeleteCategoryService();
 
-    await deleteCategoryService.execute({ user_id, category_id, isConfirmed });
+    await deleteCategoryService.execute({
+      user_id,
+      category_id,
+      isConfirmed: isConfirmed as boolean,
+    });
 
     return res.status(204).send();
   }

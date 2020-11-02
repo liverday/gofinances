@@ -9,6 +9,7 @@ const light: Theme = {
     background: '#F0F2F5',
     success: '#12a454',
     danger: '#e83f5b',
+    overlay: '#333333',
 
     primaryText: '#363f5f',
     secondaryText: '#fff',

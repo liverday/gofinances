@@ -27,6 +27,8 @@
     "react-switch": "^5.0.1",
     "react-toastify": "^6.0.8",
     "styled-components": "^5.1.0",
+    "sweetalert2": "^10.9.0",
+    "sweetalert2-react-content": "^3.2.1",
     "typescript": "~3.7.2",
     "yup": "^0.29.3"
   },

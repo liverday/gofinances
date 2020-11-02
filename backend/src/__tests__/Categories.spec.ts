@@ -185,11 +185,8 @@ describe('Categories', () => {
 
     if (category) {
       const response = await request(app)
-        .delete(`/categories/${category.id}`)
-        .auth(token, { type: 'bearer' })
-        .send({
-          isConfirmed: true,
-        });
+        .delete(`/categories/${category.id}?isConfirmed=true`)
+        .auth(token, { type: 'bearer' });
 
       expect(response.status).toBe(204);
     }

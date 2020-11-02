@@ -9,6 +9,7 @@ const dark: Theme = {
     background: '#333',
     success: '#19E475',
     danger: '#E83F4D',
+    overlay: '#222222',
 
     primaryText: '#F0F2F5',
     secondaryText: '#fff',
