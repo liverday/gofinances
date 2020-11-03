@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, addHours } from 'date-fns';
 import { tint } from 'polished';
 import { GraphData, Category } from '../services/interfaces';
 import Theme from '../styles/themes/theme';
@@ -42,7 +42,9 @@ export default function serializeGraphData(
     };
   }
   return {
-    labels: data.income.map((entry: any[]) => format(new Date(entry[0]), 'dd')),
+    labels: data.income.map((entry: any[]) =>
+      format(addHours(new Date(entry[0]), 3), 'dd'),
+    ),
     datasets: [
       {
         label: 'Entradas',

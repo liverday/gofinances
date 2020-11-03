@@ -29,7 +29,7 @@ const sizes: { [key in ModalSizeVariant]: string } = {
 };
 
 export const ModalContent = styled.div<ModalContentProps>`
-  background: ${props => props.theme.colors.background};
+  background: ${props => props.theme.colors.default};
   color: ${props => props.theme.colors.primaryText};
   display: flex;
   height: 100%;

@@ -4,12 +4,8 @@ import {
   getTime,
   addDays,
   subMonths,
-  subWeeks,
-  subHours,
   addWeeks,
-  startOfDay,
   startOfWeek,
-  setDate,
   endOfDay,
 } from 'date-fns';
 
@@ -50,16 +46,16 @@ interface PeriodDate {
 
 const startFn = {
   week(date: Date): Date {
-    return subHours(startOfWeek(date, { weekStartsOn: 1 }), 3);
+    return startOfWeek(date, { weekStartsOn: 1 });
   },
   month(date: Date): Date {
-    return subHours(startOfWeek(subMonths(date, 1), { weekStartsOn: 1 }), 3);
+    return startOfWeek(subMonths(date, 1), { weekStartsOn: 1 });
   },
 };
 
 export function calculatePeriod(period: 'week' | 'month'): PeriodDate {
   const baseDate = new Date();
-  const endDate = subHours(endOfDay(addDays(baseDate, 1)), 3);
+  const endDate = endOfDay(baseDate);
   const startDate = startFn[period](baseDate);
 
   return {

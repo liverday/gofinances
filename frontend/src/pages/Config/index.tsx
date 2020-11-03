@@ -20,13 +20,14 @@ import {
   Delete,
   NewCategoryButton,
 } from './styles';
+import FormAddCategory from './FormAddCategory';
 
 const ReactSwal = withReactContent(Swal);
 
 const Config: React.FC = () => {
   const { theme } = useTheme();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isShowingModal, setIsShowingModal] = useState<boolean>(false);
+  const [isShowingModal, setIsShowingModal] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadCategories(): Promise<void> {
@@ -78,6 +79,10 @@ const Config: React.FC = () => {
     },
     [theme, categories],
   );
+
+  const handleSubmit = useCallback(async (data: any) => {
+    console.log(data);
+  }, []);
 
   return (
     <>
@@ -143,7 +148,10 @@ const Config: React.FC = () => {
         </TableContainer>
 
         <Modal show={isShowingModal} onClose={handleCloseModal}>
-          <h1>teste</h1>
+          <FormAddCategory
+            onSubmit={handleSubmit}
+            onCancel={handleCloseModal}
+          />
         </Modal>
       </Container>
     </>
