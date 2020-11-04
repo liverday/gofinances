@@ -13,9 +13,16 @@ interface ModalProps {
   show: boolean;
   onClose: Function;
   size?: ModalSizeVariant;
+  height?: number;
 }
 
-const Modal: React.FC<ModalProps> = ({ show, onClose, size, children }) => {
+const Modal: React.FC<ModalProps> = ({
+  show,
+  onClose,
+  size,
+  children,
+  height,
+}) => {
   useEffect(() => {
     if (show) document.body.style.overflow = 'hidden';
 
@@ -28,7 +35,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, size, children }) => {
     <>
       {show && (
         <ModalWrapper>
-          <ModalContent size={size || 'md'}>
+          <ModalContent size={size || 'md'} height={height}>
             <ModalOverflow>{children}</ModalOverflow>
             <ModalCloseButton onClick={() => onClose()}>
               &times;

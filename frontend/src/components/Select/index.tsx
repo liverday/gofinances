@@ -1,21 +1,31 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useRef, useEffect } from 'react';
 import ReactSelect, {
+  OptionsType,
   OptionTypeBase,
   Props as SelectProps,
 } from 'react-select';
+import AsyncReactSelect from 'react-select/async';
+
 import { useField } from '@unform/core';
-
-import { useTheme } from '../../hooks/theme';
-
-import getCustomSelectOptions from '../../utils/getCustomSelectOptions';
 
 interface Props extends SelectProps<OptionTypeBase> {
   name: string;
   keyField?: string;
+  async?: boolean;
+  loadOptions?: (
+    inputValue: string,
+    callback: (options: OptionsType<OptionTypeBase>) => void,
+  ) => Promise<any> | void;
 }
 
-const Select: React.FC<Props> = ({ name, keyField = 'value', ...rest }) => {
-  const { theme } = useTheme();
+const Select: React.FC<Props> = ({
+  name,
+  keyField = 'value',
+  async = false,
+  loadOptions,
+  ...rest
+}) => {
   const selectRef = useRef(null);
 
   const { fieldName, defaultValue, registerField } = useField(name);
@@ -41,11 +51,18 @@ const Select: React.FC<Props> = ({ name, keyField = 'value', ...rest }) => {
     });
   }, [fieldName, registerField, rest.isMulti, keyField]);
 
-  return (
+  return async ? (
+    <AsyncReactSelect
+      loadOptions={loadOptions!}
+      classNamePrefix="react-select"
+      placeholder="Selecione uma opção"
+      ref={selectRef}
+      {...rest}
+    />
+  ) : (
     <ReactSelect
       defaultValue={defaultValue}
       classNamePrefix="react-select"
-      styles={getCustomSelectOptions(theme)}
       placeholder="Selecione uma opção"
       ref={selectRef}
       {...rest}

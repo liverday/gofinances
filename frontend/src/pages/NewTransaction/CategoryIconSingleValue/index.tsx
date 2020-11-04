@@ -7,7 +7,7 @@ import { useTheme } from '../../../hooks/theme';
 
 import { Container } from './styles';
 
-const IconSingleValue: React.FC<SingleValueProps<OptionTypeBase>> = ({
+const CategoryIconSingleValue: React.FC<SingleValueProps<OptionTypeBase>> = ({
   innerProps,
   data,
 }) => {
@@ -32,4 +32,4 @@ const IconSingleValue: React.FC<SingleValueProps<OptionTypeBase>> = ({
   );
 };
 
-export default IconSingleValue;
+export default CategoryIconSingleValue;

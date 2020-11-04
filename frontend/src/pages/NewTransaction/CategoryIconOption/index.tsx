@@ -6,7 +6,7 @@ import { useTheme } from '../../../hooks/theme';
 
 import { Container } from './styles';
 
-const IconOption: React.FC<OptionProps<OptionTypeBase>> = ({
+const CategoryIconOption: React.FC<OptionProps<OptionTypeBase>> = ({
   innerProps,
   data,
 }) => {
@@ -29,4 +29,4 @@ const IconOption: React.FC<OptionProps<OptionTypeBase>> = ({
   );
 };
 
-export default IconOption;
+export default CategoryIconOption;

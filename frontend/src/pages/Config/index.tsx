@@ -27,7 +27,7 @@ const ReactSwal = withReactContent(Swal);
 const Config: React.FC = () => {
   const { theme } = useTheme();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isShowingModal, setIsShowingModal] = useState<boolean>(true);
+  const [isShowingModal, setIsShowingModal] = useState<boolean>(false);
 
   useEffect(() => {
     async function loadCategories(): Promise<void> {
@@ -62,6 +62,11 @@ const Config: React.FC = () => {
           showDenyButton: true,
           confirmButtonColor: theme.colors.success,
           denyButtonColor: theme.colors.danger,
+          background: theme.colors.background,
+          customClass: {
+            title: 'themed-swal-text',
+            content: 'themed-swal-text',
+          },
         });
 
         if (isConfirmed) {
@@ -79,10 +84,6 @@ const Config: React.FC = () => {
     },
     [theme, categories],
   );
-
-  const handleSubmit = useCallback(async (data: any) => {
-    console.log(data);
-  }, []);
 
   return (
     <>
@@ -147,9 +148,9 @@ const Config: React.FC = () => {
           </table>
         </TableContainer>
 
-        <Modal show={isShowingModal} onClose={handleCloseModal}>
+        <Modal show={isShowingModal} onClose={handleCloseModal} height={650}>
           <FormAddCategory
-            onSubmit={handleSubmit}
+            onSubmitted={handleCloseModal}
             onCancel={handleCloseModal}
           />
         </Modal>

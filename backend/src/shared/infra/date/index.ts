@@ -9,6 +9,8 @@ import {
   endOfDay,
 } from 'date-fns';
 
+import { utcToZonedTime } from 'date-fns-tz';
+
 const periodUnitsDict = {
   month: 'week',
   week: 'day',
@@ -54,7 +56,7 @@ const startFn = {
 };
 
 export function calculatePeriod(period: 'week' | 'month'): PeriodDate {
-  const baseDate = new Date();
+  const baseDate = utcToZonedTime(new Date(), 'America/Sao_Paulo');
   const endDate = endOfDay(baseDate);
   const startDate = startFn[period](baseDate);
 

@@ -18,6 +18,7 @@ export const ModalOverflow = styled.div`
 
 interface ModalContentProps {
   size?: ModalSizeVariant;
+  height?: number;
 }
 
 export type ModalSizeVariant = 'sm' | 'md' | 'lg';
@@ -35,7 +36,7 @@ export const ModalContent = styled.div<ModalContentProps>`
   height: 100%;
   left: 0;
   margin: 50px auto;
-  max-height: 80%;
+  max-height: ${props => (props.height ? `${props.height}px` : '80%')};
   position: absolute;
   right: 0;
   width: ${({ size }) => {

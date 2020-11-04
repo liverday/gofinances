@@ -11,13 +11,14 @@ import { useTheme } from '../../hooks/theme';
 import api from '../../services/api';
 import { Category } from '../../services/interfaces';
 import getValidationErrors from '../../utils/getValidationErrors';
+import getCustomSelectOptions from '../../utils/getCustomSelectOptions';
 
 import Header from '../../components/Header';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Select from '../../components/Select';
-import IconOption from './IconOption';
-import IconSingleValue from './IconSingleValue';
+import CategoryIconOption from './CategoryIconOption';
+import CategoryIconSingleValue from './CategoryIconSingleValue';
 
 import TransactionTypeSelector, {
   SelectedType,
@@ -124,8 +125,12 @@ const NewTransaction: React.FC = () => {
               name="category"
               keyField="id"
               options={categories}
+              styles={getCustomSelectOptions(theme)}
               getOptionLabel={category => category.title}
-              components={{ Option: IconOption, SingleValue: IconSingleValue }}
+              components={{
+                Option: CategoryIconOption,
+                SingleValue: CategoryIconSingleValue,
+              }}
             />
 
             <Input

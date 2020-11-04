@@ -21,4 +21,8 @@ export default createGlobalStyle`
   button {
     cursor: pointer;
   }
+
+  .themed-swal-text {
+    color: ${props => props.theme.colors.primaryText};
+  }
 `;

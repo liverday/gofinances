@@ -5,6 +5,13 @@ import Button from '../../../components/Button';
 
 export const Container = styled.div`
   padding: 20px;
+  height: 100%;
+
+  form {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+  }
 `;
 
 export const Header = styled.div`
@@ -23,6 +30,7 @@ export const Header = styled.div`
 `;
 
 export const Body = styled.div`
+  flex: 1;
   padding: 20px 0;
 
   .form-group {
@@ -52,6 +60,7 @@ export const Footer = styled.div`
   justify-content: flex-end;
 
   button {
+    margin-top: 0;
     width: 120px;
     height: 48px;
   }
@@ -72,5 +81,12 @@ export const CancelButton = styled(Button)`
       props.theme.title === 'dark'
         ? tint(0.05, props.theme.colors.background)
         : shade(0.25, props.theme.colors.background)};
+  }
+
+  &:disabled {
+    background: ${props =>
+      props.theme.title === 'dark'
+        ? tint(0.025, props.theme.colors.background)
+        : shade(0.12, props.theme.colors.background)};
   }
 `;
