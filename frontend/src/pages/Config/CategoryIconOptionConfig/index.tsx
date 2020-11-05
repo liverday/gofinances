@@ -9,7 +9,8 @@ const CategoryIconOptionConfig: React.FC<
   OptionProps<OptionTypeBase> | SingleValueProps<OptionTypeBase>
 > = ({ innerProps, data }) => {
   const { id } = data;
-  const Icon = (Icons as any)[id];
+  const [, iconName] = id.split('/');
+  const Icon = (Icons as any)[iconName];
   return (
     <Container {...innerProps}>
       <Icon size={20} />

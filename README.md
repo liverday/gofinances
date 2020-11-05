@@ -13,6 +13,7 @@ GoFinances é uma aplicação Mobile/Web com o objetivo de controlar suas finan�
     - React Paginate
     - React Select
     - React Datepicker
+    - React Color
 - Unform
 - Styled Components
 - Chart JS
@@ -84,5 +85,9 @@ yarn typeorm migration:run
 ```sh
 yarn dev:server
 ```
+
+#### Mobile
+
+Em desenvolvimento 💻 
 
 Feito com :heart: por Vitor Medeiro. 🤝 Entre em [contato](https://www.linkedin.com/in/vitor-medeiro-9096ab138) 

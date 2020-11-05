@@ -12,7 +12,6 @@ export const ModalWrapper = styled.div`
 `;
 
 export const ModalOverflow = styled.div`
-  overflow: auto;
   width: 100%;
 `;
 

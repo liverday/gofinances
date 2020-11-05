@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useState,
 } from 'react';
+import { FiAlertCircle } from 'react-icons/fi';
 
 import { rgba } from 'polished';
 
@@ -18,6 +19,7 @@ import {
   ColorSquare,
   BlockPickerContainer,
   BlockPickerCover,
+  Error,
 } from './styles';
 
 interface ColorPickerProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -53,7 +55,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
     [inputRef],
   );
 
-  const { fieldName, defaultValue, registerField } = useField(name);
+  const { fieldName, defaultValue, registerField, error } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -91,7 +93,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 },
                 input: {
                   boxShadow: `${rgba(
-                    theme.colors.background,
+                    theme.colors.default,
                     1,
                   )} 0px 0px 0px 1px inset`,
                   color: theme.colors.primaryText,
@@ -100,6 +102,12 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
             }}
           />
         </BlockPickerContainer>
+      )}
+
+      {error && (
+        <Error title={error}>
+          <FiAlertCircle size={20} />
+        </Error>
       )}
     </Container>
   );

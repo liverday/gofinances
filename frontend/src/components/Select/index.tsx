@@ -9,6 +9,8 @@ import AsyncReactSelect from 'react-select/async';
 
 import { useField } from '@unform/core';
 
+import { Container } from './styles';
+
 interface Props extends SelectProps<OptionTypeBase> {
   name: string;
   keyField?: string;
@@ -28,7 +30,7 @@ const Select: React.FC<Props> = ({
 }) => {
   const selectRef = useRef(null);
 
-  const { fieldName, defaultValue, registerField } = useField(name);
+  const { fieldName, defaultValue, registerField, error } = useField(name);
   useEffect(() => {
     registerField({
       name: fieldName,
@@ -40,6 +42,14 @@ const Select: React.FC<Props> = ({
           }
           return ref.state.value.map((option: OptionTypeBase) => option.value);
         }
+        if (async) {
+          if (!ref.select.state.value) {
+            return '';
+          }
+
+          return ref.select.state.value[keyField];
+        }
+
         if (!ref.state.value) {
           return '';
         }
@@ -49,24 +59,28 @@ const Select: React.FC<Props> = ({
         ref.select.clearValue();
       },
     });
-  }, [fieldName, registerField, rest.isMulti, keyField]);
+  }, [fieldName, registerField, rest.isMulti, keyField, async]);
 
-  return async ? (
-    <AsyncReactSelect
-      loadOptions={loadOptions!}
-      classNamePrefix="react-select"
-      placeholder="Selecione uma opção"
-      ref={selectRef}
-      {...rest}
-    />
-  ) : (
-    <ReactSelect
-      defaultValue={defaultValue}
-      classNamePrefix="react-select"
-      placeholder="Selecione uma opção"
-      ref={selectRef}
-      {...rest}
-    />
+  return (
+    <Container hasError={!!error}>
+      {async ? (
+        <AsyncReactSelect
+          loadOptions={loadOptions!}
+          classNamePrefix="react-select"
+          placeholder="Selecione uma opção"
+          ref={selectRef}
+          {...rest}
+        />
+      ) : (
+        <ReactSelect
+          defaultValue={defaultValue}
+          classNamePrefix="react-select"
+          placeholder="Selecione uma opção"
+          ref={selectRef}
+          {...rest}
+        />
+      )}
+    </Container>
   );
 };
 

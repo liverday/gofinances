@@ -14,7 +14,11 @@ export default class GetTransactionsCountByCategoryController {
       user_id,
     );
 
-    const categories = await categoriesRepository.find();
+    const categories = await categoriesRepository.find({
+      where: {
+        user_id,
+      },
+    });
 
     categories.forEach(category => {
       const found = transactionsByCategory.find(

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import * as Icons from 'react-icons/all';
+import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
@@ -47,6 +48,28 @@ const Config: React.FC = () => {
     setIsShowingModal(true);
   }, []);
 
+  const handleCategoryAdded = useCallback(
+    (categoryAdded: Category) => {
+      setCategories([...categories, categoryAdded]);
+
+      toast.success('Categoria adicionada com sucesso!');
+
+      handleCloseModal();
+    },
+    [categories, handleCloseModal],
+  );
+
+  const filterAndSetCategories = useCallback(
+    (categoryToDelete: Category) => {
+      const newCategories = categories.filter(
+        category => category.id !== categoryToDelete.id,
+      );
+
+      setCategories([...newCategories]);
+    },
+    [categories],
+  );
+
   const handleDelete = useCallback(
     async (categoryToDelete: Category) => {
       const { data, status } = await api.delete(
@@ -74,15 +97,15 @@ const Config: React.FC = () => {
             `/categories/${categoryToDelete.id}?isConfirmed=${isConfirmed}`,
           );
 
-          const newCategories = categories.filter(
-            category => category.id !== categoryToDelete.id,
-          );
-
-          setCategories([...newCategories]);
+          filterAndSetCategories(categoryToDelete);
+          toast.success('Categoria deletada com sucesso!');
         }
+      } else {
+        filterAndSetCategories(categoryToDelete);
+        toast.success('Categoria deletada com sucesso!');
       }
     },
-    [theme, categories],
+    [theme, filterAndSetCategories],
   );
 
   return (
@@ -150,7 +173,7 @@ const Config: React.FC = () => {
 
         <Modal show={isShowingModal} onClose={handleCloseModal} height={650}>
           <FormAddCategory
-            onSubmitted={handleCloseModal}
+            onSubmitted={handleCategoryAdded}
             onCancel={handleCloseModal}
           />
         </Modal>

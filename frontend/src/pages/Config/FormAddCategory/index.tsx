@@ -1,6 +1,5 @@
 import React, { useRef, useCallback, useState } from 'react';
 import * as Yup from 'yup';
-import { toast } from 'react-toastify';
 import * as IconsFi from 'react-icons/fi';
 import * as IconsFa from 'react-icons/fa';
 import { FormHandles } from '@unform/core';
@@ -12,6 +11,9 @@ import { useTheme } from '../../../hooks/theme';
 import getValidationErrors from '../../../utils/getValidationErrors';
 import { getCustomSelectOptionsModal } from '../../../utils/getCustomSelectOptions';
 
+import api from '../../../services/api';
+import { Category } from '../../../services/interfaces';
+
 import { Container, Header, Footer, CancelButton, Body } from './styles';
 
 import Button from '../../../components/Button';
@@ -21,8 +23,15 @@ import Select from '../../../components/Select';
 import CategoryIconOptionConfig from '../CategoryIconOptionConfig';
 
 interface FormAddCategoryProps {
-  onSubmitted(): void;
+  onSubmitted(category: Category): void;
   onCancel(): void;
+}
+
+interface AddCategoryFormData {
+  title: string;
+  icon: string;
+  background_color_dark: string;
+  background_color_light: string;
 }
 
 const FormAddCategory: React.FC<FormAddCategoryProps> = ({
@@ -38,7 +47,8 @@ const FormAddCategory: React.FC<FormAddCategoryProps> = ({
     ...(IconsFi as any),
     ...(IconsFa as any),
   };
-  const icons = Object.keys(Icons as any).map(id => {
+  const icons = Object.keys(Icons as any).map(icon => {
+    const id = `${icon.substring(0, 1).toLowerCase()}/${icon}`;
     return {
       id,
       Component: (Icons as any)[id],
@@ -71,22 +81,44 @@ const FormAddCategory: React.FC<FormAddCategoryProps> = ({
     />
   );
 
-  const handleSubmit = useCallback(async (data: any) => {
-    try {
-      formRef.current?.setErrors({});
-      setIsLoading(true);
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
+  const handleSubmit = useCallback(
+    async (formData: AddCategoryFormData) => {
+      try {
+        formRef.current?.setErrors({});
+        setIsLoading(true);
 
-        formRef.current?.setErrors(errors);
+        const schema = Yup.object().shape({
+          title: Yup.string().required('Título é obrigatório'),
+          icon: Yup.string().required('Ícone é obrigatório'),
+          background_color_dark: Yup.string().required(
+            'Cor Dark é obrigatória',
+          ),
+          background_color_light: Yup.string().required(
+            'Cor Light é obrigatória',
+          ),
+        });
+
+        await schema.validate(formData, {
+          abortEarly: false,
+        });
+
+        const { data } = await api.post('/categories', formData);
+
+        setIsLoading(false);
+
+        onSubmitted({ ...data });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+        }
+
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
-    }
-
-    onSubmitted();
-  }, []);
+    },
+    [onSubmitted],
+  );
 
   return (
     <Container>
@@ -130,12 +162,12 @@ const FormAddCategory: React.FC<FormAddCategoryProps> = ({
 
           <ColorPicker
             containerClassName="form-group"
-            name="color_dark"
+            name="background_color_dark"
             placeholder="Cor Dark"
           />
           <ColorPicker
             containerClassName="form-group"
-            name="color_light"
+            name="background_color_light"
             placeholder="Cor Light"
           />
         </Body>
