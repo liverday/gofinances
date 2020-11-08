@@ -80,6 +80,10 @@ cd backend
 yarn typeorm migration:run
 ```
 
+**Configure as variáveis de ambiente**
+
+Duplique o arquivo `.env.example`, removendo a parte `.example` do nome (ficando apenas `.env`). Após isso, altere os valores conforme necessário.
+
 **Inicie o processo**
 
 ```sh
