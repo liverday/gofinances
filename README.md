@@ -69,7 +69,7 @@ yarn start
 **Certifique-se de que o container do Postgres esteja rodando**
 
 ```sh
-docker run --name gofinances-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=p0stgres -e POSTGRES_DB=gofinances -p 5432:5432 -d postgres
+docker run --name gofinances-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=p0stgr3s -e POSTGRES_DB=gofinances -p 5432:5432 -d postgres
 ```
 
 **Rode as migrations**
